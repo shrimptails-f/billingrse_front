@@ -55,10 +55,12 @@ describe('apiFetch', () => {
       })
     );
 
-    await expect(apiFetch<void, { token: string }>('POST', '/auth/email/verify', {
-      body: { token: 'verify-token' },
-      attachAuthToken: false,
-    })).resolves.toBeUndefined();
+    await expect(
+      apiFetch<void, { token: string }>('POST', '/auth/email/verify', {
+        body: { token: 'verify-token' },
+        attachAuthToken: false,
+      })
+    ).resolves.toBeUndefined();
   });
 
   it('refreshes the session and retries once after a 401 response', async () => {
