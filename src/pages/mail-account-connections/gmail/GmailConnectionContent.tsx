@@ -50,12 +50,12 @@ export const GmailConnectionContent = (): JSX.Element => {
       <div className="mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-lg backdrop-blur">
         <div className="space-y-3">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-600">
-            Gmail 連携
+            Mail Services
           </p>
-          <h1 className="text-3xl font-bold text-slate-900">Gmail と連携する</h1>
+          <h1 className="text-3xl font-bold text-slate-900">メールサービス連携</h1>
           <p className="text-base leading-7 text-slate-600">
-            Google の認可画面へ移動して、Gmail
-            の読み取り連携を開始します。認可後はこのアプリに戻り、連携結果を確認できます。
+            ここでは Gmail 連携を開始できます。Google
+            の認可画面へ移動し、認可後はこのアプリに戻って結果を確認できます。
           </p>
         </div>
 
