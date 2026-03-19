@@ -192,6 +192,12 @@ export const GmailOAuthCallbackContent = (): JSX.Element => {
             <div className="flex w-full flex-col gap-2">
               <Button
                 type="button"
+                onClick={() => navigate('/mail-account-connections/gmail', { replace: true })}
+              >
+                連携ページへ戻る
+              </Button>
+              <Button
+                type="button"
                 variant="secondary"
                 onClick={() => navigate('/home', { replace: true })}
               >
