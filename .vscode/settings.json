@@ -1,0 +1,24 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "eslint.validate": ["yml", "json", "javascript", "typescript", "typescriptreact"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "cSpell.ignoreWords": [
+    "Billingrse",
+    "chakrounanas",
+    "yoavbls",
+    "saoudrizwan",
+    "dbaeumer",
+    "esbenp",
+    "partialize",
+    "Gantt",
+    "turbopack",
+    "vercel",
+    "vite"
+  ]
+}

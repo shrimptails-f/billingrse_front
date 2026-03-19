@@ -1,0 +1,24 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ../
+      dockerfile: .devcontainer/infra/NextJs/Dockerfile
+      args:
+        - APP_ROOT=$APP_ROOT
+    env_file:
+      - .env
+    tty: true
+    ports:
+      - $WEB_PORT:$WEB_PORT
+    environment:
+      - SERVER_API_URL=$SERVER_API_URL
+    volumes:
+      - ../:$APP_ROOT
+      - ~/.gitconfig:$APP_ROOT/.gitconfig
+    networks:
+      billing_parser:
+
+networks:
+  billing_parser:
+    external: true
