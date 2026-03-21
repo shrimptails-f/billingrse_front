@@ -71,19 +71,13 @@ export const ConnectionList = (): JSX.Element => {
           連携情報の取得に失敗しました。時間をおいて再度お試しください。
         </div>
       ) : data?.items.length === 0 ? (
-        <p className="text-sm text-slate-400 py-4 text-center">
-          連携済みのアカウントはありません
-        </p>
+        <p className="text-sm text-slate-400 py-4 text-center">連携済みのアカウントはありません</p>
       ) : (
         <div className="mt-2">
           {data?.items.map((item, index) => (
             <div
               key={item.id}
-              className={
-                index < (data.items.length ?? 0) - 1
-                  ? 'border-b border-slate-100'
-                  : ''
-              }
+              className={index < (data.items.length ?? 0) - 1 ? 'border-b border-slate-100' : ''}
             >
               <ConnectionRow
                 provider={item.provider}

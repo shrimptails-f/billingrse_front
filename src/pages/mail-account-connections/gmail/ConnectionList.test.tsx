@@ -41,7 +41,9 @@ describe('ConnectionList', () => {
   it('shows error message on fetch failure', () => {
     isError = true;
     render(<ConnectionList />);
-    expect(screen.getByText('連携情報の取得に失敗しました。時間をおいて再度お試しください。')).toBeInTheDocument();
+    expect(
+      screen.getByText('連携情報の取得に失敗しました。時間をおいて再度お試しください。')
+    ).toBeInTheDocument();
   });
 
   it('shows empty state when no connections', () => {
