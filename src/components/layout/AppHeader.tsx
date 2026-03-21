@@ -62,16 +62,14 @@ export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
   return (
     <header className="relative z-20 border-b border-slate-200 bg-white/80 backdrop-blur">
       <div className="page-shell flex h-14 items-center justify-between">
-        <div className="text-base font-semibold tracking-wide text-emerald-700">{title}</div>
+        <button
+          type="button"
+          className="text-base font-semibold tracking-wide text-emerald-700 transition hover:text-emerald-900"
+          onClick={() => navigate('/home')}
+        >
+          {title}
+        </button>
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
-            onClick={handleLogout}
-          >
-            ログアウト
-          </button>
-
           <div ref={menuRef} className="relative">
             <button
               type="button"
@@ -106,6 +104,17 @@ export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
                   <span className="text-xs leading-5 text-slate-500">
                     Gmail 連携画面へ移動します
                   </span>
+                </button>
+
+                <div className="my-1 border-t border-slate-100" />
+
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="flex w-full items-center rounded-xl px-4 py-3 text-left text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+                  onClick={handleLogout}
+                >
+                  ログアウト
                 </button>
               </div>
             ) : null}
