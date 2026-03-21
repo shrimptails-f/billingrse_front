@@ -23,6 +23,10 @@ vi.mock('./useStartGmailOAuth', () => ({
   }),
 }));
 
+vi.mock('./ConnectionList', () => ({
+  ConnectionList: () => <div data-testid="connection-list" />,
+}));
+
 describe('GmailConnectionContent', () => {
   beforeEach(() => {
     navigateMock.mockReset();
@@ -43,7 +47,7 @@ describe('GmailConnectionContent', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Gmail と連携する' }));
+    fireEvent.click(screen.getByRole('button', { name: '連携追加' }));
     expect(mutateMock).toHaveBeenCalledTimes(1);
 
     const options = mutateMock.mock.calls[0][1] as {
@@ -68,7 +72,7 @@ describe('GmailConnectionContent', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Gmail と連携する' }));
+    fireEvent.click(screen.getByRole('button', { name: '連携追加' }));
     const options = mutateMock.mock.calls[0][1] as {
       onError: (error: unknown) => void;
     };

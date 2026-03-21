@@ -29,3 +29,23 @@ export type GmailOAuthErrorBody = {
     message?: string;
   };
 };
+
+// 一覧 API レスポンス
+export type ConnectionItem = {
+  id: number;
+  provider: string;
+  account_identifier: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ConnectionListResponse = {
+  items: ConnectionItem[];
+};
+
+// 解除 API エラー
+export type DisconnectErrorCode =
+  | 'invalid_request'
+  | 'unauthorized'
+  | 'mail_account_connection_not_found'
+  | 'internal_server_error';
