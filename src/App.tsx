@@ -8,6 +8,8 @@ import SignupPage from './pages/signup/page';
 import SignupEmailSentPage from './pages/signup/email-sent/page';
 import SignupVerifyPage from './pages/signup/verify/page';
 import HomePage from './pages/home/page';
+import GmailConnectionPage from './pages/mail-account-connections/gmail/page';
+import GmailOAuthCallbackPage from './pages/mail-account-connections/gmail/callback/page';
 
 export default function App() {
   return (
@@ -19,9 +21,14 @@ export default function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/signup/email-sent" element={<SignupEmailSentPage />} />
           <Route path="/signup/verify" element={<SignupVerifyPage />} />
+          <Route
+            path="/mail-account-connections/gmail/callback"
+            element={<GmailOAuthCallbackPage />}
+          />
 
           <Route element={<DashboardLayout />}>
             <Route path="/home" element={<HomePage />} />
+            <Route path="/mail-account-connections/gmail" element={<GmailConnectionPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

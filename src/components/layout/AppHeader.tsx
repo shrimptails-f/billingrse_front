@@ -1,4 +1,5 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { authSessionQueryKey, logout } from '@/lib/api/auth';
 import { clearAuthToken } from '@/lib/auth/token';
@@ -11,7 +12,40 @@ const APP_NAME = import.meta.env.VITE_APP_NAME || 'アプリケーション';
 
 export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!(event.target instanceof Node)) {
+        return;
+      }
+
+      if (!menuRef.current?.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -26,16 +60,57 @@ export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
   };
 
   return (
-    <header className="relative border-b border-slate-200 bg-white/80 backdrop-blur">
+    <header className="relative z-20 border-b border-slate-200 bg-white/80 backdrop-blur">
       <div className="page-shell flex h-14 items-center justify-between">
         <div className="text-base font-semibold tracking-wide text-emerald-700">{title}</div>
-        <button
-          type="button"
-          className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
-          onClick={handleLogout}
-        >
-          ログアウト
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+            onClick={handleLogout}
+          >
+            ログアウト
+          </button>
+
+          <div ref={menuRef} className="relative">
+            <button
+              type="button"
+              aria-label="メニュー"
+              aria-haspopup="menu"
+              aria-expanded={isMenuOpen}
+              aria-controls="app-header-menu"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+              onClick={() => setIsMenuOpen((current) => !current)}
+            >
+              <span className="flex flex-col items-center gap-1">
+                <span className="block h-0.5 w-5 rounded-full bg-current" />
+                <span className="block h-0.5 w-5 rounded-full bg-current" />
+                <span className="block h-0.5 w-5 rounded-full bg-current" />
+              </span>
+            </button>
+
+            {isMenuOpen ? (
+              <div
+                id="app-header-menu"
+                role="menu"
+                aria-label="ヘッダーメニュー"
+                className="absolute right-0 top-[calc(100%+0.5rem)] z-30 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-200/70"
+              >
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="flex w-full flex-col rounded-xl px-4 py-3 text-left transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+                  onClick={() => navigate('/mail-account-connections/gmail')}
+                >
+                  <span className="text-sm font-semibold text-slate-900">メールサービス連携</span>
+                  <span className="text-xs leading-5 text-slate-500">
+                    Gmail 連携画面へ移動します
+                  </span>
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </div>
       </div>
     </header>
   );
