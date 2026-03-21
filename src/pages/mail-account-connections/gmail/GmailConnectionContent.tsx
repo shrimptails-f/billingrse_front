@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/primitives/Button';
 import { ApiError } from '@/lib/api/client';
 import type { GmailAuthorizeResponse } from './gmail-oauth.types';
 import { useStartGmailOAuth } from './useStartGmailOAuth';
+import { ConnectionList } from './ConnectionList';
 
 const mapStartError = (error: unknown): string => {
   if (error instanceof ApiError && error.status === 401) {
@@ -50,18 +51,30 @@ export const GmailConnectionContent = (): JSX.Element => {
       <div className="mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-lg backdrop-blur">
         <div className="space-y-3">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-600">
-            Mail Services
+            メールサービス連携
           </p>
-          <h1 className="text-3xl font-bold text-slate-900">メールサービス連携</h1>
           <p className="text-base leading-7 text-slate-600">
-            ここでは Gmail 連携を開始できます。Google
-            の認可画面へ移動し、認可後はこのアプリに戻って結果を確認できます。
+            Gmail アカウントを連携して、メールをこのアプリで管理できます。
           </p>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-600">
-          連携済みアカウントの一覧表示や解除は、今回の API には含まれていません。現時点では Gmail
-          連携の開始と callback 完了のみを提供します。
+        <div className="flex justify-end mt-4">
+          <Button
+            type="button"
+            fullWidth={false}
+            disabled={isSubmitting}
+            aria-label="連携追加"
+            leftIcon={
+              isSubmitting ? (
+                <Spinner size={16} className="text-white" />
+              ) : (
+                <span aria-hidden="true">+</span>
+              )
+            }
+            onClick={handleStart}
+          >
+            {isSubmitting ? 'Google に移動しています...' : '連携追加'}
+          </Button>
         </div>
 
         {serverError ? (
@@ -75,17 +88,9 @@ export const GmailConnectionContent = (): JSX.Element => {
           </div>
         ) : null}
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button
-            type="button"
-            fullWidth={false}
-            disabled={isSubmitting}
-            aria-label="Gmail と連携する"
-            leftIcon={isSubmitting ? <Spinner size={16} className="text-white" /> : null}
-            onClick={handleStart}
-          >
-            {isSubmitting ? 'Google に移動しています...' : 'Gmail と連携する'}
-          </Button>
+        <ConnectionList />
+
+        <div className="flex justify-center mt-8">
           <Button
             type="button"
             variant="secondary"
