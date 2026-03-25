@@ -43,6 +43,25 @@ const mapStartError = (error: unknown): string => {
   return '受付に失敗しました。時間をおいて再度お試しください。';
 };
 
+const formatDateInputValue = (value: Date): string => {
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, '0');
+  const day = String(value.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
+
+const getCurrentMonthDateRange = (): Pick<ManualMailWorkflowFormValues, 'since' | 'until'> => {
+  const now = new Date();
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  return {
+    since: formatDateInputValue(firstDay),
+    until: formatDateInputValue(lastDay),
+  };
+};
+
 const SelectFieldInner = (props: SelectFieldProps, ref: Ref<HTMLSelectElement>): JSX.Element => {
   const { id, label, error, helperText, children, className, ...rest } = props;
   const errorId = error ? `${id}-error` : undefined;
@@ -83,6 +102,7 @@ SelectField.displayName = 'SelectField';
 
 export const WorkflowRequestForm = (props: Props): JSX.Element => {
   const { onWorkflowAccepted, onUnauthorized } = props;
+  const defaultDateRange = getCurrentMonthDateRange();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isAccepted, setIsAccepted] = useState(false);
   const [isSubmittingLocally, setIsSubmittingLocally] = useState(false);
@@ -105,8 +125,8 @@ export const WorkflowRequestForm = (props: Props): JSX.Element => {
     defaultValues: {
       connectionId: '',
       labelName: '',
-      since: '',
-      until: '',
+      since: defaultDateRange.since,
+      until: defaultDateRange.until,
     },
     mode: 'onBlur',
   });

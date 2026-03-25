@@ -150,10 +150,10 @@ export const WorkflowHistoryList = (props: Props): JSX.Element => {
                     <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-slate-700">
                       ステータス
                     </th>
-                    <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-slate-700">
+                    <th className="whitespace-nowrap px-4 py-3 text-center font-semibold text-slate-700">
                       現在ステージ
                     </th>
-                    <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-slate-700">
+                    <th className="whitespace-nowrap px-4 py-3 text-center font-semibold text-slate-700">
                       詳細
                     </th>
                   </tr>
@@ -170,14 +170,14 @@ export const WorkflowHistoryList = (props: Props): JSX.Element => {
                       <td className="px-4 py-4">
                         <span
                           className={[
-                            'inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold',
+                            'inline-flex min-w-[5rem] items-center justify-center whitespace-nowrap rounded-full border px-3 py-1 text-xs font-semibold',
                             getStatusClassName(history.status),
                           ].join(' ')}
                         >
                           {getStatusLabel(history.status)}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-4 text-slate-700">
+                      <td className="whitespace-nowrap px-4 py-4 text-center text-slate-700">
                         {getCurrentStageLabel(history)}
                       </td>
                       <td className="px-4 py-4">
@@ -185,7 +185,7 @@ export const WorkflowHistoryList = (props: Props): JSX.Element => {
                           type="button"
                           variant="secondary"
                           fullWidth={false}
-                          className="px-3 py-2 text-xs"
+                          className="min-w-[4.5rem] whitespace-nowrap px-3 py-2 text-xs"
                           onClick={() => {
                             setSelectedHistory(history);
                           }}

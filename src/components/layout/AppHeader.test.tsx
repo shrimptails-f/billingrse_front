@@ -36,7 +36,7 @@ describe('AppHeader', () => {
     expect(navigateMock).toHaveBeenCalledWith('/mail-account-connections/gmail');
   });
 
-  it('opens the hamburger menu and navigates to the manual workflow page', () => {
+  it('does not show the manual workflow entry in the hamburger menu', () => {
     render(
       <MemoryRouter>
         <Providers>
@@ -46,8 +46,7 @@ describe('AppHeader', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: 'メニュー' }));
-    fireEvent.click(screen.getByRole('menuitem', { name: /手動メール取得/ }));
 
-    expect(navigateMock).toHaveBeenCalledWith('/manual-mail-workflows');
+    expect(screen.queryByRole('menuitem', { name: /手動メール取得/ })).not.toBeInTheDocument();
   });
 });

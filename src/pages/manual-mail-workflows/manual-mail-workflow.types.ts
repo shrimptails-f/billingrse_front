@@ -41,6 +41,7 @@ export type ManualMailWorkflowStageSummary = {
 
 export type ManualMailWorkflowHistoryItem = {
   workflow_id: string;
+  error_message?: string | null;
   connection_id: number;
   provider?: string | null;
   account_identifier?: string | null;

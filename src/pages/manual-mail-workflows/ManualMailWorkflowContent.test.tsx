@@ -40,6 +40,7 @@ let historyData:
   | {
       items: Array<{
         workflow_id: string;
+        error_message?: string | null;
         connection_id: number;
         provider?: string | null;
         account_identifier?: string | null;
@@ -207,6 +208,7 @@ describe('ManualMailWorkflowContent', () => {
       items: [
         {
           workflow_id: 'wf_history_1',
+          error_message: null,
           connection_id: 1,
           provider: 'gmail',
           account_identifier: 'user@gmail.com',
@@ -293,6 +295,23 @@ describe('ManualMailWorkflowContent', () => {
     expect(screen.getByText('手動メール取得の実行履歴を表示します。')).toBeInTheDocument();
   });
 
+  it('sets the current month date range as the default form values', () => {
+    const now = new Date();
+    const expectedSince = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    const expectedUntil = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()).padStart(2, '0')}`;
+
+    render(
+      <MemoryRouter>
+        <Providers>
+          <ManualMailWorkflowContent />
+        </Providers>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByLabelText('開始日')).toHaveValue(expectedSince);
+    expect(screen.getByLabelText('終了日')).toHaveValue(expectedUntil);
+  });
+
   it('opens a detail modal from the history table', () => {
     render(
       <MemoryRouter>
@@ -313,10 +332,46 @@ describe('ManualMailWorkflowContent', () => {
     expect(within(dialog).getByText('メールアドレス')).toBeInTheDocument();
     expect(within(dialog).getByText('gmail')).toBeInTheDocument();
     expect(within(dialog).getByText('user@gmail.com')).toBeInTheDocument();
+    expect(within(dialog).queryByText('エラーメッセージ')).not.toBeInTheDocument();
     expect(within(dialog).getByRole('columnheader', { name: 'ステージ' })).toBeInTheDocument();
     expect(within(dialog).getByText('決済会社判定')).toBeInTheDocument();
     expect(within(dialog).getByText('請求成立可否判定')).toBeInTheDocument();
     expect(within(dialog).getByText('メール取得に失敗しました。')).toBeInTheDocument();
+  });
+
+  it('shows a workflow-level error message in the detail modal when present', () => {
+    if (!historyData) {
+      throw new Error('historyData must be defined for this test');
+    }
+
+    historyData = {
+      ...historyData,
+      items: historyData.items.map((item) => ({
+        ...item,
+        error_message: '履歴全体の処理に失敗しました。',
+      })),
+    };
+
+    render(
+      <MemoryRouter>
+        <Providers>
+          <ManualMailWorkflowContent />
+        </Providers>
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: '詳細' }));
+
+    const dialog = screen.getByRole('dialog');
+    const alert = within(dialog).getByRole('alert');
+    const executedAtTerm = within(dialog).getByText('実行日時');
+
+    expect(alert).toBeInTheDocument();
+    expect(within(dialog).getByText('エラーメッセージ')).toBeInTheDocument();
+    expect(within(dialog).getByText('履歴全体の処理に失敗しました。')).toBeInTheDocument();
+    expect(alert.compareDocumentPosition(executedAtTerm) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
   });
 
   it('updates the query offset when moving to the next page', () => {

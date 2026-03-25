@@ -40,6 +40,8 @@ export const WorkflowHistoryDetailModal = (props: Props): JSX.Element | null => 
     return null;
   }
 
+  const workflowErrorMessage = history.error_message?.trim();
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 p-4"
@@ -63,6 +65,22 @@ export const WorkflowHistoryDetailModal = (props: Props): JSX.Element | null => 
               <h3 id="workflow-history-detail-title" className="text-2xl font-bold text-slate-900">
                 履歴詳細
               </h3>
+
+              {workflowErrorMessage ? (
+                <div
+                  role="alert"
+                  aria-live="polite"
+                  className="rounded-2xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-700"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="mt-2 h-2 w-2 rounded-full bg-red-500" />
+                    <div className="space-y-1">
+                      <p className="font-semibold">エラーメッセージ</p>
+                      <p className="leading-6">{workflowErrorMessage}</p>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
               <dl className="grid gap-4 text-sm md:grid-cols-2">
                 <div>
