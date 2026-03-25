@@ -35,4 +35,18 @@ describe('AppHeader', () => {
 
     expect(navigateMock).toHaveBeenCalledWith('/mail-account-connections/gmail');
   });
+
+  it('does not show the manual workflow entry in the hamburger menu', () => {
+    render(
+      <MemoryRouter>
+        <Providers>
+          <AppHeader />
+        </Providers>
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'メニュー' }));
+
+    expect(screen.queryByRole('menuitem', { name: /手動メール取得/ })).not.toBeInTheDocument();
+  });
 });

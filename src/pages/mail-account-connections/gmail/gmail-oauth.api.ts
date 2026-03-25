@@ -1,6 +1,6 @@
+import { fetchMailAccountConnections } from '@/lib/api/mail-account-connections';
 import { apiFetch } from '@/lib/api/client';
 import type {
-  ConnectionListResponse,
   GmailAuthorizeResponse,
   GmailOAuthCallbackPayload,
   GmailOAuthCallbackResponse,
@@ -19,10 +19,7 @@ export const completeGmailOAuth = (
     retryOnUnauthorized: true,
   });
 
-export const fetchConnectionList = (): Promise<ConnectionListResponse> =>
-  apiFetch('GET', '/mail-account-connections', {
-    retryOnUnauthorized: true,
-  });
+export const fetchConnectionList = () => fetchMailAccountConnections();
 
 export const disconnectConnection = (connectionId: number): Promise<void> =>
   apiFetch('DELETE', `/mail-account-connections/${connectionId}`, {

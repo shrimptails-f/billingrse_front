@@ -1,3 +1,8 @@
+import type {
+  MailAccountConnectionItem,
+  MailAccountConnectionListResponse,
+} from '@/lib/api/mail-account-connections';
+
 export type GmailAuthorizeResponse = {
   authorization_url: string;
   expires_at: string;
@@ -31,17 +36,9 @@ export type GmailOAuthErrorBody = {
 };
 
 // 一覧 API レスポンス
-export type ConnectionItem = {
-  id: number;
-  provider: string;
-  account_identifier: string;
-  created_at: string;
-  updated_at: string;
-};
+export type ConnectionItem = MailAccountConnectionItem;
 
-export type ConnectionListResponse = {
-  items: ConnectionItem[];
-};
+export type ConnectionListResponse = MailAccountConnectionListResponse;
 
 // 解除 API エラー
 export type DisconnectErrorCode =

@@ -10,6 +10,7 @@ import SignupVerifyPage from './pages/signup/verify/page';
 import HomePage from './pages/home/page';
 import GmailConnectionPage from './pages/mail-account-connections/gmail/page';
 import GmailOAuthCallbackPage from './pages/mail-account-connections/gmail/callback/page';
+import ManualMailWorkflowPage from './pages/manual-mail-workflows/page';
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/home" element={<HomePage />} />
             <Route path="/mail-account-connections/gmail" element={<GmailConnectionPage />} />
+            <Route path="/manual-mail-workflows" element={<ManualMailWorkflowPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
