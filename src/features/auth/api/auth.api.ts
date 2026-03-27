@@ -1,10 +1,9 @@
-// src/features/auth/api/auth.api.ts
-import { apiFetch } from '@/shared/api/client';
+import { get } from '@/shared/api/http';
 
 export const authSessionQueryKey = ['auth', 'session'] as const;
 
 export const checkAuth = (signal?: AbortSignal): Promise<void> => {
-  return apiFetch('GET', '/auth/check', {
+  return get<void>('/auth/check', {
     signal,
     retryOnUnauthorized: true,
   });

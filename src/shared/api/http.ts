@@ -7,11 +7,11 @@ import {
 } from '@/lib/auth/token';
 import { Client, type RequestOptions } from './client';
 
-type BodylessRequestOptions = Omit<RequestOptions<never>, 'body'>;
+type BodyLessRequestOptions = Omit<RequestOptions<never>, 'body'>;
 
-const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL ?? 'http://localhost:8080/api/v1';
+const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
-const AUTH_REFRESH_ENDPOINT = import.meta.env.VITE_AUTH_REFRESH_ENDPOINT ?? '/auth/refresh';
+const AUTH_REFRESH_ENDPOINT = '/auth/refresh';
 
 const refreshClient = new Client({
   baseUrl: BACKEND_API_URL,
@@ -51,7 +51,7 @@ export const apiClient = new Client({
 
 export const get = <TResponse>(
   endpoint: string,
-  options: BodylessRequestOptions = {}
+  options: BodyLessRequestOptions = {}
 ): Promise<TResponse> => {
   return apiClient.request<TResponse>('GET', endpoint, options);
 };
@@ -79,7 +79,7 @@ export const patch = <TResponse, TBody = unknown>(
 
 export const deleteRequest = <TResponse>(
   endpoint: string,
-  options: BodylessRequestOptions = {}
+  options: BodyLessRequestOptions = {}
 ): Promise<TResponse> => {
   return apiClient.request<TResponse>('DELETE', endpoint, options);
 };
