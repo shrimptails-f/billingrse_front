@@ -1,33 +1,25 @@
 import type { JSX } from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Spinner } from '@/components/ui/Spinner';
-import { Button } from '@/components/ui/primitives/Button';
-import { TextField } from '@/components/ui/primitives/TextField';
+import { useNavigate } from 'react-router-dom';
 import { ApiError, getApiErrorCode } from '@/shared/api/client';
-import { signupSchema, type SignupFormValues } from './signup.schema';
-import { useSignup } from './useSignup';
+import { Button } from '@/shared/ui/primitives/Button';
+import { TextField } from '@/shared/ui/primitives/TextField';
+import { useSignup } from '../hooks/useSignup';
+import { persistLastRegisteredEmail } from '../lib/lastRegisteredEmail';
+import { signupSchema, type SignupFormValues } from '../schema/signup.schema';
 
 const mapSignupError = (error: unknown): string => {
   if (error instanceof ApiError) {
     const code = getApiErrorCode(error);
+
     if (error.status === 401 && code === 'email_already_exists') {
       return 'このメールアドレスは既に登録されています。';
     }
   }
 
   return 'エラーが発生しました。時間をおいて再度お試しください。';
-};
-
-const persistEmail = (email: string): void => {
-  if (typeof window === 'undefined') return;
-  try {
-    sessionStorage.setItem('lastRegisteredEmail', email);
-  } catch {
-    // no-op
-  }
 };
 
 export const SignupForm = (): JSX.Element => {
@@ -47,12 +39,13 @@ export const SignupForm = (): JSX.Element => {
   const signupMutation = useSignup();
   const isSubmitting = signupMutation.isPending;
 
-  const onSubmit = (values: SignupFormValues) => {
+  const onSubmit = (values: SignupFormValues): void => {
     setServerError(null);
     signupMutation.mutate(values, {
       onSuccess: (response) => {
         const email = response.user?.email ?? values.email;
-        persistEmail(email);
+        persistLastRegisteredEmail(email);
+
         const search = email ? `?email=${encodeURIComponent(email)}` : '';
         navigate(`/signup/email-sent${search}`, { replace: true });
       },
@@ -119,11 +112,7 @@ export const SignupForm = (): JSX.Element => {
         ) : null}
 
         <div className="space-y-3">
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            leftIcon={isSubmitting ? <Spinner size={16} className="text-white" /> : null}
-          >
+          <Button type="submit" loading={isSubmitting}>
             {isSubmitting ? '送信中...' : '登録してメールを送る'}
           </Button>
 

@@ -1,14 +1,15 @@
-import type { JSX } from 'react';
-import { SignupForm } from './SignupForm';
+import type { JSX, ReactNode } from 'react';
 
-const SignupPage = (): JSX.Element => {
+type Props = {
+  children: ReactNode;
+};
+
+export const AuthScreenLayout = ({ children }: Props): JSX.Element => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-slate-100 text-slate-900">
       <div className="page-shell flex min-h-screen items-center justify-center py-12">
-        <SignupForm />
+        {children}
       </div>
     </div>
   );
 };
-
-export default SignupPage;

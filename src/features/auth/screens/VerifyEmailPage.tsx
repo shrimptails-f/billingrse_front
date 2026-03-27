@@ -1,11 +1,11 @@
 import type { JSX } from 'react';
 import { AuthScreenLayout } from '../components/AuthScreenLayout';
-import { LoginForm } from '../components/LoginForm';
+import { VerifyEmailContent } from '../components/VerifyEmailContent';
 
-export const LoginPage = (): JSX.Element => {
+export const VerifyEmailPage = (): JSX.Element => {
   return (
     <AuthScreenLayout>
-      <LoginForm />
+      <VerifyEmailContent />
     </AuthScreenLayout>
   );
 };

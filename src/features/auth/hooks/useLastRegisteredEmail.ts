@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { persistLastRegisteredEmail, readLastRegisteredEmail } from '../lib/lastRegisteredEmail';
 
 export const useLastRegisteredEmail = () => {
   const [searchParams] = useSearchParams();
@@ -7,22 +8,14 @@ export const useLastRegisteredEmail = () => {
 
   useEffect(() => {
     const paramEmail = searchParams.get('email');
+
     if (paramEmail) {
       setEmail(paramEmail);
-      try {
-        sessionStorage.setItem('lastRegisteredEmail', paramEmail);
-      } catch {
-        // no-op
-      }
+      persistLastRegisteredEmail(paramEmail);
       return;
     }
 
-    try {
-      const stored = sessionStorage.getItem('lastRegisteredEmail');
-      setEmail(stored);
-    } catch {
-      setEmail(null);
-    }
+    setEmail(readLastRegisteredEmail());
   }, [searchParams]);
 
   return { email };

@@ -62,6 +62,10 @@ export class ApiError<TBody = unknown, TDetails = unknown> extends Error {
   }
 }
 
+export const getApiErrorCode = (error: unknown): string | undefined => {
+  return error instanceof ApiError ? error.code : undefined;
+};
+
 export type ClientAuthConfig = {
   refreshEndpoint: string;
   getAuthorizationHeaderValue: () => string | undefined;

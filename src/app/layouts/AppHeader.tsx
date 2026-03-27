@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLogout } from '@/features/auth';
 
 type Props = {
   title?: string;
@@ -9,6 +10,7 @@ const APP_NAME = import.meta.env.VITE_APP_NAME || 'アプリケーション';
 
 export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
   const navigate = useNavigate();
+  const logoutMutation = useLogout();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -37,6 +39,18 @@ export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  const handleLogout = async (): Promise<void> => {
+    setIsMenuOpen(false);
+
+    try {
+      await logoutMutation.mutateAsync();
+    } catch (error) {
+      console.error('Failed to logout', error);
+    } finally {
+      navigate('/login', { replace: true });
+    }
+  };
 
   return (
     <header className="relative z-20 border-b border-slate-200 bg-white/80 backdrop-blur">
@@ -92,9 +106,10 @@ export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
                   type="button"
                   role="menuitem"
                   className="flex w-full items-center rounded-xl px-4 py-3 text-left text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={handleLogout}
+                  disabled={logoutMutation.isPending}
                 >
-                  ログアウト
+                  {logoutMutation.isPending ? 'ログアウト中...' : 'ログアウト'}
                 </button>
               </div>
             ) : null}

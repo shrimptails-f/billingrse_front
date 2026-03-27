@@ -2,7 +2,7 @@ import type { JSX } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { DashboardLayout } from '@/app/layouts/DashboardLayout';
 import { Providers } from '@/app/providers/Providers';
-import { LoginPage, SignupPage } from '@/features/auth';
+import { LoginPage, SignupEmailSentPage, SignupPage, VerifyEmailPage } from '@/features/auth';
 import { BillingSummaryPage } from '@/features/billing';
 import { HomePage } from '@/features/dashboard';
 import { AuthGuard, GuestGuard } from '@/app/router/guards';
@@ -19,6 +19,9 @@ const AppRouter = (): JSX.Element => {
             <Route path="/signup" element={<SignupPage />} />
           </Route>
 
+          <Route path="/signup/email-sent" element={<SignupEmailSentPage />} />
+          <Route path="/signup/verify" element={<VerifyEmailPage />} />
+
           <Route element={<AuthGuard />}>
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<HomePage />} />
@@ -26,9 +29,7 @@ const AppRouter = (): JSX.Element => {
             </Route>
           </Route>
 
-          <Route path="/home" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashbord" element={<Navigate to="/dashboard" replace />} />
-
+          <Route path="/dashboard" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Providers>

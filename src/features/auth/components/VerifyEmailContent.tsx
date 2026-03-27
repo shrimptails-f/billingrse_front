@@ -1,14 +1,15 @@
 import type { JSX } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Spinner } from '@/components/ui/Spinner';
-import { Button } from '@/components/ui/primitives/Button';
 import { ApiError, getApiErrorCode } from '@/shared/api/client';
-import { useVerifyEmail } from './useVerifyEmail';
+import { Spinner } from '@/shared/ui/Spinner';
+import { Button } from '@/shared/ui/primitives/Button';
+import { useVerifyEmail } from '../hooks/useVerifyEmail';
 
 const mapVerifyError = (error: unknown): string => {
   if (error instanceof ApiError) {
     const code = getApiErrorCode(error);
+
     if (error.status === 400 && code === 'invalid_token') {
       return '不正なトークンです。';
     }
@@ -32,7 +33,7 @@ const headingByStatus: Record<
   },
   success: {
     title: 'メール認証が完了しました',
-    description: 'ログイン状態でホームへ移動できます。',
+    description: 'ダッシュボードへ進むと、未ログインの場合はログイン画面へ移動します。',
   },
   error: {
     title: 'メール認証に失敗しました',
@@ -52,26 +53,25 @@ export const VerifyEmailContent = (): JSX.Element => {
   const [message, setMessage] = useState<string | null>(
     token ? 'メールアドレスを確認しています...' : 'トークンが見つかりませんでした。'
   );
-
-  // Guard against StrictMode double-invocation: track if we've already started the mutation
   const hasStartedRef = useRef<string | null>(null);
   const { mutateAsync } = useVerifyEmail();
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
-    // If we've already started a mutation for this token, skip it
     if (hasStartedRef.current === token) {
       return;
     }
 
-    // Mark that we're starting the mutation for this token
     hasStartedRef.current = token;
 
     void mutateAsync(token)
       .then((response) => {
         setStatus('success');
         setMessage(response.message ?? 'メールアドレスの認証が完了しました。');
+
         try {
           window.history.replaceState(null, '', '/signup/verify');
         } catch {
@@ -113,12 +113,18 @@ export const VerifyEmailContent = (): JSX.Element => {
             <p aria-live="polite" className="text-base font-semibold text-emerald-700">
               {message}
             </p>
-            <p className="text-sm text-slate-600">
-              ホームへ移動するには下のボタンを押してください。
-            </p>
-            <Button type="button" onClick={() => navigate('/home', { replace: true })}>
-              ホームへ移動する
-            </Button>
+            <div className="flex w-full flex-col gap-2">
+              <Button type="button" onClick={() => navigate('/dashboard', { replace: true })}>
+                ダッシュボードへ移動する
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => navigate('/login', { replace: true })}
+              >
+                ログイン画面へ進む
+              </Button>
+            </div>
           </>
         ) : null}
 

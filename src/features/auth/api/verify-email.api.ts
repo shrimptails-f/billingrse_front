@@ -1,4 +1,4 @@
-import { apiFetch } from '@/shared/api/client';
+import { post } from '@/shared/api/http';
 
 export type VerifyEmailResponse = {
   message: string;
@@ -12,9 +12,10 @@ export type VerifyEmailResponse = {
   };
 };
 
-export const verifyEmail = (token: string): Promise<VerifyEmailResponse> =>
-  apiFetch('POST', '/auth/email/verify', {
+export const verifyEmail = (token: string): Promise<VerifyEmailResponse> => {
+  return post<VerifyEmailResponse, { token: string }>('/auth/email/verify', {
     body: { token },
     attachAuthToken: false,
     credentials: 'omit',
   });
+};

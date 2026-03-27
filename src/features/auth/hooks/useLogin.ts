@@ -1,10 +1,8 @@
-'use client';
-
-import { useQueryClient, useMutation } from '@tanstack/react-query';
-import { authSessionQueryKey } from '@/lib/api/auth';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { setAuthSession, type AuthSessionResponse } from '@/lib/auth/token';
-import type { LoginFormValues } from './login.schema';
-import { login } from './login.api';
+import { authSessionQueryKey } from '../api/auth.api';
+import { login } from '../api/login.api';
+import type { LoginFormValues } from '../schema/login.schema';
 
 export const useLogin = () => {
   const queryClient = useQueryClient();

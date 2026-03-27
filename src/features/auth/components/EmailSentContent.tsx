@@ -1,7 +1,7 @@
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/primitives/Button';
-import { useLastRegisteredEmail } from './useLastRegisteredEmail';
+import { Button } from '@/shared/ui/primitives/Button';
+import { useLastRegisteredEmail } from '../hooks/useLastRegisteredEmail';
 
 export const EmailSentContent = (): JSX.Element => {
   const navigate = useNavigate();
@@ -37,6 +37,7 @@ export const EmailSentContent = (): JSX.Element => {
         <Button type="button" onClick={() => navigate('/login', { replace: true })}>
           ログイン画面へ戻る
         </Button>
+
         <Button
           type="button"
           variant="secondary"
