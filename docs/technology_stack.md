@@ -2,46 +2,76 @@
 
 ## フレームワーク / 言語
 
-- **Next.js（App Router）**
-  - `app/` ディレクトリベース
-  - Route Group：`(auth)` / `(app)` でログイン前後を分割
+- **React 18**
+  - UI 構築のベース
 - **TypeScript**
-  - 関数は変数代入スタイルで定義
+  - 型安全を前提に実装する
+- **Vite**
+  - 開発サーバー、build、preview を担当する
+- **React Router**
+  - クライアントサイドルーティングを担当する
+
+## ディレクトリ構成
+
+- **`app / features / shared`**
+  - `app/`: router、providers、layout などアプリ全体の骨格
+  - `features/`: 業務機能ごとの screen、UI、hooks、API、schema、types
+  - `shared/`: 複数 feature で再利用する UI や基盤コード
 
 ## スタイリング / UI
 
 - **Tailwind CSS**
-  - ユーティリティクラスでのスタイリング
-  - コンポーネント側で className を組み合わせ
-- **自作 UI コンポーネント（Material Design 風）**
-  - 外部 UI ライブラリは使わない（Material Tailwind / MUI など）
-  - `shared/ui/` に Button / TextField / Card / Dialog / Table など
-  - Tailwind ベースで構築し、必要に応じて CSS の直書きも許容
+  - ユーティリティクラスベースでスタイリングする
+- **自作 UI コンポーネント**
+  - `shared/ui/` に共通 UI を配置する
+  - Button、TextField、Spinner などを共通部品として管理する
 
 ## 状態管理 / フォーム / バリデーション
 
-- **Zustand**
-  - UI 状態管理（サイドバー開閉、テーマ、グローバル UI フラグなど）
-  - サーバーデータは基本的に持たない
+- **TanStack Query**
+  - サーバ状態の取得、更新、キャッシュ管理を担当する
 - **React Hook Form**
-  - フォーム状態管理
-  - ログイン / 会員登録 / 検索フォームなどに利用
+  - フォーム状態管理を担当する
 - **Zod**
-  - 入力バリデーション + 型定義
-  - `zodResolver` で RHF と連携
+  - 入力バリデーションと型定義に利用する
+- **React のローカル state**
+  - 画面内で閉じる UI 状態に利用する
 
 ## データ取得 / API
 
-- **TanStack Query**
-  - サーバー状態（Server State）のソースオブトゥルース
-  - Gmail 解析結果 / ログインユーザ情報 / Home の統計情報など
 - **fetch + 共通 API クライアント**
-  - `lib/api/client.ts` に `apiRequest` ラッパを作成
-  - 各画面・機能ごとに `xxx.api.ts` を定義して呼び出し
+  - HTTP 通信は共通クライアント経由で行う
+  - 認証ヘッダ、エラー整形、リトライなどを共通化する
+- **feature ごとの API モジュール**
+  - 各業務機能ごとに `*.api.ts` を定義して利用する
+- **Vite 環境変数**
+  - `import.meta.env.VITE_*` を利用する
 
 ## テスト
 
-- **React Testing Library**
-  - コンポーネント振る舞いテスト
 - **Vitest**
-  - テストランナー（jsdom 環境）
+  - テストランナー
+- **React Testing Library**
+  - UI の振る舞いテスト
+- **jsdom**
+  - ブラウザ相当のテスト環境
+
+## 品質管理
+
+- **ESLint**
+  - 静的解析
+- **Prettier**
+  - コード整形
+
+## 主要コマンド
+
+- `npm run dev`
+  - 開発サーバー起動
+- `npm run build`
+  - 本番 build
+- `npm run preview`
+  - build 結果の確認
+- `npm run lint`
+  - ESLint 実行
+- `npm run test`
+  - Vitest 実行
