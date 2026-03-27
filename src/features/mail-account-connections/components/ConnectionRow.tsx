@@ -1,6 +1,6 @@
 import type { ComponentType, JSX } from 'react';
-import { GmailIcon } from './icons/GmailIcon';
-import { MailFallbackIcon } from './icons/MailFallbackIcon';
+import { GmailIcon } from '@/shared/ui/icons/GmailIcon';
+import { MailFallbackIcon } from '@/shared/ui/icons/MailFallbackIcon';
 
 const providerIconMap: Record<string, ComponentType> = {
   gmail: GmailIcon,
@@ -19,7 +19,8 @@ export const ConnectionRow = ({
   onDisconnect,
   isDisconnecting,
 }: Props): JSX.Element => {
-  const Icon = providerIconMap[provider] ?? MailFallbackIcon;
+  const normalizedProvider = provider.toLowerCase();
+  const Icon = providerIconMap[normalizedProvider] ?? MailFallbackIcon;
 
   return (
     <div className="flex items-center gap-3 py-3">
