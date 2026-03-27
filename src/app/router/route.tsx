@@ -3,10 +3,9 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { DashboardLayout } from '@/app/layouts/DashboardLayout';
 import { Providers } from '@/app/providers/Providers';
 import { LoginPage, SignupPage } from '@/features/auth';
-import { BillingSummaryPage } from '@/features/billing/screens/BillingSummaryPage';
-import { HomePage } from '@/features/dashboard/screens/HomePage';
-import { AuthGuard } from './guards/AuthGuard';
-import { GuestGuard } from './guards/GuestGuard';
+import { BillingSummaryPage } from '@/features/billing';
+import { HomePage } from '@/features/dashboard';
+import { AuthGuard, GuestGuard } from '@/app/router/guards';
 
 const AppRouter = (): JSX.Element => {
   return (

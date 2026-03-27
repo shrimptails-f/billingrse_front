@@ -43,6 +43,15 @@
 - route 用 screen は `LoginPage.tsx` のように目的が分かる名前にする
 - 汎用名の `page.tsx` より、役割が明示された名前を優先する
 
+### 2-4. `index.ts` / barrel の運用
+
+- `index.ts` は feature やモジュールの公開面を定義するために使う
+- `features/*/index.ts` には、feature 外から参照してよい screen や hook など、公開するものだけを export してよい
+- `app/router/guards/index.ts` のように、責務がまとまった小さな単位を外に見せる用途でも使ってよい
+- `components/index.ts` や `shared/index.ts` のような、何でも再 export する巨大 barrel は作らない
+- feature 内部の実装同士は、原則として `index.ts` を経由せず相対 import を使う
+- 深い階層に機械的に `index.ts` を増やさず、公開面としての必要性が明確な場合だけ追加する
+
 ## 3. TypeScript の書き方
 
 - `any` は原則禁止とする
