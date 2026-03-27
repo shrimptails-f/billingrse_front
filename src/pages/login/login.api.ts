@@ -1,4 +1,4 @@
-import { apiFetch } from '@/lib/api/client';
+import { apiFetch } from '@/shared/api/client';
 import type { AuthSessionResponse } from '@/lib/auth/token';
 import type { LoginFormValues } from './login.schema';
 

@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { PageIntroCard } from '@/components/ui/PageIntroCard';
 import { Spinner } from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/primitives/Button';
-import { toFriendlyMessage } from '@/lib/api/errors';
+import { toFriendlyMessage } from '@/shared/api/errors';
 import { authSessionQueryKey } from '@/lib/api/auth';
-import { ApiError } from '@/lib/api/client';
+import { ApiError } from '@/shared/api/client';
 import { clearAuthToken } from '@/lib/auth/token';
 import type {
   BillingCurrency,

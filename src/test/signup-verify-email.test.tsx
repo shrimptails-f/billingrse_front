@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { VerifyEmailContent } from '@/pages/signup/verify/VerifyEmailContent';
-import { ApiError } from '@/lib/api/client';
+import { ApiError } from '@/shared/api/client';
 
 const navigateMock = vi.fn();
 const mutateAsyncMock = vi.fn();

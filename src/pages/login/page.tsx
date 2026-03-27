@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { toFriendlyMessage } from '@/lib/api/errors';
+import { toFriendlyMessage } from '@/shared/api/errors';
 import { Spinner } from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/primitives/Button';
 import { TextField } from '@/components/ui/primitives/TextField';

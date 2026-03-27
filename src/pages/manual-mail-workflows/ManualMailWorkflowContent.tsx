@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { PageIntroCard } from '@/components/ui/PageIntroCard';
 import { authSessionQueryKey } from '@/lib/api/auth';
-import { ApiError } from '@/lib/api/client';
+import { ApiError } from '@/shared/api/client';
 import { clearAuthToken } from '@/lib/auth/token';
 import { WorkflowRequestForm } from './execution-conditions/WorkflowRequestForm';
 import { WorkflowHistoryList } from './execution-history/WorkflowHistoryList';

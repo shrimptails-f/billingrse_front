@@ -6,21 +6,13 @@ import { useForm } from 'react-hook-form';
 import { Spinner } from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/primitives/Button';
 import { TextField } from '@/components/ui/primitives/TextField';
-import { ApiError } from '@/lib/api/client';
+import { ApiError, getApiErrorCode } from '@/shared/api/client';
 import { signupSchema, type SignupFormValues } from './signup.schema';
 import { useSignup } from './useSignup';
 
-type ErrorBody = {
-  error?: {
-    code?: string;
-    message?: string;
-  };
-};
-
 const mapSignupError = (error: unknown): string => {
   if (error instanceof ApiError) {
-    const body = error.body as ErrorBody | undefined;
-    const code = body?.error?.code;
+    const code = getApiErrorCode(error);
     if (error.status === 401 && code === 'email_already_exists') {
       return 'このメールアドレスは既に登録されています。';
     }

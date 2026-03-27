@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Spinner } from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/primitives/Button';
-import { ApiError } from '@/lib/api/client';
+import { ApiError, getApiErrorCode } from '@/shared/api/client';
 import type { GmailOAuthErrorBody } from '../gmail-oauth.types';
 import { useCompleteGmailOAuth } from './useCompleteGmailOAuth';
 
@@ -70,14 +70,9 @@ const getInitialMessage = (status: Status, googleError: string | null): string =
   return 'Gmail 連携に失敗しました。もう一度お試しください。';
 };
 
-const extractApiErrorCode = (error: ApiError): string | undefined => {
-  const body = error.body as GmailOAuthErrorBody | undefined;
-  return body?.code ?? body?.error?.code;
-};
-
 const mapCallbackError = (error: unknown): string => {
   if (error instanceof ApiError) {
-    const code = extractApiErrorCode(error);
+    const code = getApiErrorCode(error) as GmailOAuthErrorBody['code'];
 
     if (error.status === 401 || code === 'unauthorized') {
       return 'ログイン期限が切れました。再度ログインしてください。';

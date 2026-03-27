@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import { SignupForm } from '@/pages/signup/SignupForm';
-import { ApiError } from '@/lib/api/client';
+import { ApiError } from '@/shared/api/client';
 
 const navigateMock = vi.fn();
 const mutateMock = vi.fn();

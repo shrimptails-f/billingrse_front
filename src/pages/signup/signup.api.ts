@@ -1,4 +1,4 @@
-import { apiFetch } from '@/lib/api/client';
+import { apiFetch } from '@/shared/api/client';
 import type { SignupFormValues } from './signup.schema';
 
 export type SignupResponse = {

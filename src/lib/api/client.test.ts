@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { apiFetch, ApiError } from './client';
+import { ApiError, get, post } from './client';
 import { clearAuthToken, getAuthToken, setAuthSession } from '@/lib/auth/token';
 
 const createJsonResponse = (body: unknown, status = 200): Response =>
@@ -10,7 +10,7 @@ const createJsonResponse = (body: unknown, status = 200): Response =>
     },
   });
 
-describe('apiFetch', () => {
+describe('http wrappers', () => {
   const fetchMock = vi.fn<typeof fetch>();
 
   beforeEach(() => {
@@ -32,7 +32,7 @@ describe('apiFetch', () => {
     });
     fetchMock.mockResolvedValueOnce(createJsonResponse({ ok: true }));
 
-    await apiFetch<{ ok: boolean }, undefined>('GET', '/protected');
+    await get<{ ok: boolean }>('/protected');
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]?.[0]).toEqual(expect.stringMatching(/\/protected$/));
@@ -56,11 +56,60 @@ describe('apiFetch', () => {
     );
 
     await expect(
-      apiFetch<void, { token: string }>('POST', '/auth/email/verify', {
+      post<void, { token: string }>('/auth/email/verify', {
         body: { token: 'verify-token' },
         attachAuthToken: false,
       })
     ).resolves.toBeUndefined();
+  });
+
+  it('normalizes nested API error responses', async () => {
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse(
+        {
+          error: {
+            code: 'invalid_request',
+            message: '入力値が不正です。',
+            details: [
+              {
+                field: 'email',
+                reason: 'required',
+              },
+            ],
+          },
+        },
+        400
+      )
+    );
+
+    try {
+      await post('/auth/register', {
+        body: {
+          email: '',
+        },
+        attachAuthToken: false,
+      });
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+
+      if (!(error instanceof ApiError)) {
+        throw error;
+      }
+
+      expect(error.status).toBe(400);
+      expect(error.message).toBe('入力値が不正です。');
+      expect(error.code).toBe('invalid_request');
+      expect(error.details).toEqual([
+        {
+          field: 'email',
+          reason: 'required',
+        },
+      ]);
+
+      return;
+    }
+
+    throw new Error('Expected apiFetch to throw ApiError');
   });
 
   it('refreshes the session and retries once after a 401 response', async () => {
@@ -80,7 +129,7 @@ describe('apiFetch', () => {
       )
       .mockResolvedValueOnce(createJsonResponse({ ok: true }));
 
-    const response = await apiFetch<{ ok: boolean }, undefined>('GET', '/auth/check', {
+    const response = await get<{ ok: boolean }>('/auth/check', {
       retryOnUnauthorized: true,
     });
 
@@ -113,7 +162,7 @@ describe('apiFetch', () => {
       .mockResolvedValueOnce(createJsonResponse({ message: 'Refresh failed' }, 401));
 
     await expect(
-      apiFetch('GET', '/auth/check', {
+      get('/auth/check', {
         retryOnUnauthorized: true,
       })
     ).rejects.toBeInstanceOf(ApiError);

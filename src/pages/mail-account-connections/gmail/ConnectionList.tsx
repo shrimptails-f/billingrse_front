@@ -2,7 +2,7 @@ import type { JSX } from 'react';
 import { useState } from 'react';
 import { Spinner } from '@/components/ui/Spinner';
 import { ConnectionRow } from '@/components/ui/ConnectionRow';
-import { ApiError } from '@/lib/api/client';
+import { ApiError } from '@/shared/api/client';
 import { useConnectionList } from './useConnectionList';
 import { useDisconnect } from './useDisconnect';
 

@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Spinner } from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/primitives/Button';
 import { TextField } from '@/components/ui/primitives/TextField';
-import { ApiError } from '@/lib/api/client';
+import { ApiError } from '@/shared/api/client';
 import {
   manualMailWorkflowSchema,
   toJstEndOfDayString,

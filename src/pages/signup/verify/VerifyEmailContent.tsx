@@ -3,20 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Spinner } from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/primitives/Button';
-import { ApiError } from '@/lib/api/client';
+import { ApiError, getApiErrorCode } from '@/shared/api/client';
 import { useVerifyEmail } from './useVerifyEmail';
-
-type ErrorBody = {
-  error?: {
-    code?: string;
-    message?: string;
-  };
-};
 
 const mapVerifyError = (error: unknown): string => {
   if (error instanceof ApiError) {
-    const body = error.body as ErrorBody | undefined;
-    const code = body?.error?.code;
+    const code = getApiErrorCode(error);
     if (error.status === 400 && code === 'invalid_token') {
       return '不正なトークンです。';
     }

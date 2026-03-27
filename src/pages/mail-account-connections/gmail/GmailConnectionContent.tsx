@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Spinner } from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/primitives/Button';
-import { ApiError } from '@/lib/api/client';
+import { ApiError } from '@/shared/api/client';
 import type { GmailAuthorizeResponse } from './gmail-oauth.types';
 import { useStartGmailOAuth } from './useStartGmailOAuth';
 import { ConnectionList } from './ConnectionList';
