@@ -5,6 +5,7 @@ import { Providers } from '@/app/providers/Providers';
 import { LoginPage, SignupEmailSentPage, SignupPage, VerifyEmailPage } from '@/features/auth';
 import { BillingSummaryPage } from '@/features/billing';
 import { HomePage } from '@/features/dashboard';
+import { GmailConnectionPage, GmailOAuthCallbackPage } from '@/features/mail-account-connections';
 import { AuthGuard, GuestGuard } from '@/app/router/guards';
 
 const AppRouter = (): JSX.Element => {
@@ -26,6 +27,11 @@ const AppRouter = (): JSX.Element => {
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<HomePage />} />
               <Route path="/billing-summary" element={<BillingSummaryPage />} />
+              <Route path="/mail-account-connections/gmail" element={<GmailConnectionPage />} />
+              <Route
+                path="/mail-account-connections/gmail/callback"
+                element={<GmailOAuthCallbackPage />}
+              />
             </Route>
           </Route>
 

@@ -92,11 +92,14 @@ export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
                   type="button"
                   role="menuitem"
                   className="flex w-full flex-col rounded-xl px-4 py-3 text-left transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    navigate('/mail-account-connections/gmail');
+                  }}
                 >
                   <span className="text-sm font-semibold text-slate-900">メールサービス連携</span>
                   <span className="text-xs leading-5 text-slate-500">
-                    遷移先は未接続のプレースホルダーです
+                    Gmail 連携画面へ移動します
                   </span>
                 </button>
 
