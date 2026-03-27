@@ -8,6 +8,7 @@ import SignupPage from './pages/signup/page';
 import SignupEmailSentPage from './pages/signup/email-sent/page';
 import SignupVerifyPage from './pages/signup/verify/page';
 import HomePage from './pages/home/page';
+import BillingSummaryPage from './pages/billing-summary/page';
 import GmailConnectionPage from './pages/mail-account-connections/gmail/page';
 import GmailOAuthCallbackPage from './pages/mail-account-connections/gmail/callback/page';
 import ManualMailWorkflowPage from './pages/manual-mail-workflows/page';
@@ -29,6 +30,7 @@ export default function App() {
 
           <Route element={<DashboardLayout />}>
             <Route path="/home" element={<HomePage />} />
+            <Route path="/billing-summary" element={<BillingSummaryPage />} />
             <Route path="/mail-account-connections/gmail" element={<GmailConnectionPage />} />
             <Route path="/manual-mail-workflows" element={<ManualMailWorkflowPage />} />
           </Route>
