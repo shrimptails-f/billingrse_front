@@ -187,9 +187,7 @@ describe('BillingSummaryContent', () => {
       screen.queryByText('月の判定: 請求日を優先し、未設定時は受信日時を使用')
     ).not.toBeInTheDocument();
     expect(screen.queryByText('対象期間: 2025年4月 - 2026年3月')).not.toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: '支払先別請求総額 2026年3月' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '支払先別請求総額 2026年3月' })).toBeInTheDocument();
     expect(screen.getByText('合計金額')).toBeInTheDocument();
     expect(screen.getByText('請求件数')).toBeInTheDocument();
     expect(screen.getByText('補完件数')).toBeInTheDocument();
