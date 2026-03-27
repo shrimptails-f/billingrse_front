@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type JSX } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   title?: string;
@@ -7,6 +8,7 @@ type Props = {
 const APP_NAME = import.meta.env.VITE_APP_NAME || 'アプリケーション';
 
 export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -39,7 +41,13 @@ export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
   return (
     <header className="relative z-20 border-b border-slate-200 bg-white/80 backdrop-blur">
       <div className="page-shell flex h-14 items-center justify-between">
-        <div className="text-base font-semibold tracking-wide text-emerald-700">{title}</div>
+        <button
+          type="button"
+          className="cursor-pointer text-base font-semibold tracking-wide text-emerald-700 transition hover:text-emerald-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+          onClick={() => navigate('/dashboard')}
+        >
+          {title}
+        </button>
 
         <div className="flex items-center gap-3">
           <div ref={menuRef} className="relative">

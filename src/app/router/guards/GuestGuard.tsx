@@ -8,7 +8,7 @@ export const GuestGuard = (): JSX.Element => {
 
   if (isChecking) return <div>Loading...</div>;
   if (isAuthorized) {
-    return <Navigate to="/home" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <Outlet />;

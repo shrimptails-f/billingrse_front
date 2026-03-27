@@ -14,7 +14,7 @@ const AppRouter = (): JSX.Element => {
     <BrowserRouter>
       <Providers>
         <Routes>
-          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
           <Route element={<GuestGuard />}>
             <Route path="/login" element={<LoginPage />} />
@@ -23,10 +23,13 @@ const AppRouter = (): JSX.Element => {
 
           <Route element={<AuthGuard />}>
             <Route element={<DashboardLayout />}>
-              <Route path="/home" element={<HomePage />} />
+              <Route path="/dashboard" element={<HomePage />} />
               <Route path="/billing-summary" element={<BillingSummaryPage />} />
             </Route>
           </Route>
+
+          <Route path="/home" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashbord" element={<Navigate to="/dashboard" replace />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
