@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { VerifyEmailContent } from '@/features/auth/components/VerifyEmailContent';
@@ -46,6 +46,18 @@ describe('VerifyEmailContent', () => {
     expect(screen.getByText('トークンが見つかりませんでした。')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '確認メールを再送する' })).toBeInTheDocument();
     expect(mutateAsyncMock).not.toHaveBeenCalled();
+  });
+
+  it('navigates to fixed resend page when resend action is clicked', () => {
+    render(
+      <MemoryRouter initialEntries={initialEntries}>
+        <VerifyEmailContent />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: '確認メールを再送する' }));
+
+    expect(navigateMock).toHaveBeenCalledWith('/signup/email-resend');
   });
 
   it('shows invalid token error when API responds with invalid_token', async () => {

@@ -4,7 +4,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ApiError, getApiErrorCode } from '@/shared/api/client';
 import { Spinner } from '@/shared/ui/Spinner';
 import { Button } from '@/shared/ui/primitives/Button';
-import { useLastRegisteredEmail } from '../hooks/useLastRegisteredEmail';
 import { useVerifyEmail } from '../hooks/useVerifyEmail';
 
 const mapVerifyError = (error: unknown): string => {
@@ -50,7 +49,6 @@ const headingByStatus: Record<
 export const VerifyEmailContent = (): JSX.Element => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { email } = useLastRegisteredEmail();
   const token = searchParams.get('token');
   const [status, setStatus] = useState<Status>(token ? 'pending' : 'missing');
   const [message, setMessage] = useState<string | null>(
@@ -58,9 +56,6 @@ export const VerifyEmailContent = (): JSX.Element => {
   );
   const hasStartedRef = useRef<string | null>(null);
   const { mutateAsync } = useVerifyEmail();
-  const resendPath = email
-    ? `/signup/email-resend?email=${encodeURIComponent(email)}`
-    : '/signup/email-resend';
 
   useEffect(() => {
     if (!token) {
@@ -139,7 +134,7 @@ export const VerifyEmailContent = (): JSX.Element => {
               {message}
             </p>
             <div className="flex w-full flex-col gap-2">
-              <Button type="button" onClick={() => navigate(resendPath)}>
+              <Button type="button" onClick={() => navigate('/signup/email-resend')}>
                 確認メールを再送する
               </Button>
               <Button type="button" variant="secondary" onClick={() => navigate('/signup')}>
