@@ -223,14 +223,10 @@ export const GmailOAuthCallbackContent = (): JSX.Element => {
               {message}
             </p>
             <div className="flex w-full flex-col gap-2">
-              <Button type="button" onClick={() => navigate(connectionPath, { replace: true })}>
+              <Button type="button" onClick={() => navigate(connectionPath)}>
                 連携ページへ戻る
               </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => navigate('/dashboard', { replace: true })}
-              >
+              <Button type="button" variant="secondary" onClick={() => navigate('/dashboard')}>
                 ホームへ戻る
               </Button>
             </div>
@@ -246,14 +242,10 @@ export const GmailOAuthCallbackContent = (): JSX.Element => {
               {message}
             </p>
             <div className="flex w-full flex-col gap-2">
-              <Button type="button" onClick={() => navigate(connectionPath, { replace: true })}>
+              <Button type="button" onClick={() => navigate(connectionPath)}>
                 もう一度やり直す
               </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => navigate('/dashboard', { replace: true })}
-              >
+              <Button type="button" variant="secondary" onClick={() => navigate('/dashboard')}>
                 ホームへ戻る
               </Button>
             </div>

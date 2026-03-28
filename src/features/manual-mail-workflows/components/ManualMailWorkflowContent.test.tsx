@@ -529,7 +529,7 @@ describe('ManualMailWorkflowContent', () => {
       options.onError(new ApiError({ status: 401, body: { code: 'unauthorized' } }));
     });
 
-    expect(navigateMock).toHaveBeenCalledWith('/login', { replace: true });
+    expect(navigateMock).toHaveBeenCalledWith('/login');
   });
 
   it('redirects to login when the history query returns 401', async () => {
@@ -544,6 +544,6 @@ describe('ManualMailWorkflowContent', () => {
       </MemoryRouter>
     );
 
-    await waitFor(() => expect(navigateMock).toHaveBeenCalledWith('/login', { replace: true }));
+    await waitFor(() => expect(navigateMock).toHaveBeenCalledWith('/login'));
   });
 });

@@ -76,7 +76,7 @@ describe('GmailOAuthCallbackContent', () => {
 
     fireEvent.click(screen.getByRole('button', { name: '連携ページへ戻る' }));
 
-    expect(navigateMock).toHaveBeenCalledWith('/mail-account-connections/gmail', { replace: true });
+    expect(navigateMock).toHaveBeenCalledWith('/mail-account-connections/gmail');
   });
 
   it('shows a friendly message when oauth state is expired', async () => {
@@ -110,6 +110,6 @@ describe('GmailOAuthCallbackContent', () => {
       fireEvent.click(screen.getByRole('button', { name: 'もう一度やり直す' }));
     });
 
-    expect(navigateMock).toHaveBeenCalledWith('/mail-account-connections/gmail', { replace: true });
+    expect(navigateMock).toHaveBeenCalledWith('/mail-account-connections/gmail');
   });
 });

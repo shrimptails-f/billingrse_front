@@ -32,7 +32,7 @@ export const LoginForm = (): JSX.Element => {
   const onSubmit = (values: LoginFormValues): void => {
     setAuthError(null);
     loginMutation.mutate(values, {
-      onSuccess: () => navigate('/dashboard', { replace: true }),
+      onSuccess: () => navigate('/dashboard'),
       onError: (error: unknown) => setAuthError(toFriendlyMessage(error)),
     });
   };
@@ -86,7 +86,7 @@ export const LoginForm = (): JSX.Element => {
           <Button
             type="button"
             variant="secondary"
-            onClick={() => navigate('/signup', { replace: true })}
+            onClick={() => navigate('/signup')}
             disabled={isSubmitting}
           >
             会員登録

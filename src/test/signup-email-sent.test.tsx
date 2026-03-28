@@ -57,5 +57,6 @@ describe('EmailSentContent', () => {
     expect(screen.queryByText(/@/)).not.toBeInTheDocument();
     expect(screen.getByText('確認メールをチェックしてください')).toBeInTheDocument();
     expect(screen.getByText('メールが届かない場合は、以下をご確認ください：')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '確認メールを再送する' })).toBeInTheDocument();
   });
 });

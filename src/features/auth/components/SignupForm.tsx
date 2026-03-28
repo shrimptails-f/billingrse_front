@@ -29,6 +29,7 @@ export const SignupForm = (): JSX.Element => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -38,6 +39,10 @@ export const SignupForm = (): JSX.Element => {
 
   const signupMutation = useSignup();
   const isSubmitting = signupMutation.isPending;
+  const emailValue = watch('email');
+  const resendPath = emailValue
+    ? `/signup/email-resend?email=${encodeURIComponent(emailValue)}`
+    : '/signup/email-resend';
 
   const onSubmit = (values: SignupFormValues): void => {
     setServerError(null);
@@ -47,7 +52,7 @@ export const SignupForm = (): JSX.Element => {
         persistLastRegisteredEmail(email);
 
         const search = email ? `?email=${encodeURIComponent(email)}` : '';
-        navigate(`/signup/email-sent${search}`, { replace: true });
+        navigate(`/signup/email-sent${search}`);
       },
       onError: (error: unknown) => {
         setServerError(mapSignupError(error));
@@ -119,7 +124,16 @@ export const SignupForm = (): JSX.Element => {
           <Button
             type="button"
             variant="secondary"
-            onClick={() => navigate('/login', { replace: true })}
+            onClick={() => navigate(resendPath)}
+            disabled={isSubmitting}
+          >
+            確認メールを再送する
+          </Button>
+
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => navigate('/login')}
             disabled={isSubmitting}
           >
             すでに登録済みの方はこちら（ログイン）

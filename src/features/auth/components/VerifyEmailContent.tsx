@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ApiError, getApiErrorCode } from '@/shared/api/client';
 import { Spinner } from '@/shared/ui/Spinner';
 import { Button } from '@/shared/ui/primitives/Button';
+import { useLastRegisteredEmail } from '../hooks/useLastRegisteredEmail';
 import { useVerifyEmail } from '../hooks/useVerifyEmail';
 
 const mapVerifyError = (error: unknown): string => {
@@ -37,17 +38,19 @@ const headingByStatus: Record<
   },
   error: {
     title: 'メール認証に失敗しました',
-    description: '再度お試しください。トークンが不正な場合は登録からやり直してください。',
+    description:
+      '再送フォームから確認メールを送り直すか、必要に応じて会員登録をやり直してください。',
   },
   missing: {
     title: 'トークンが見つかりません',
-    description: 'メールのリンクを再度開くか、会員登録からやり直してください。',
+    description: 'メールのリンクを再度開くか、確認メールの再送をお試しください。',
   },
 };
 
 export const VerifyEmailContent = (): JSX.Element => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { email } = useLastRegisteredEmail();
   const token = searchParams.get('token');
   const [status, setStatus] = useState<Status>(token ? 'pending' : 'missing');
   const [message, setMessage] = useState<string | null>(
@@ -55,6 +58,9 @@ export const VerifyEmailContent = (): JSX.Element => {
   );
   const hasStartedRef = useRef<string | null>(null);
   const { mutateAsync } = useVerifyEmail();
+  const resendPath = email
+    ? `/signup/email-resend?email=${encodeURIComponent(email)}`
+    : '/signup/email-resend';
 
   useEffect(() => {
     if (!token) {
@@ -114,14 +120,10 @@ export const VerifyEmailContent = (): JSX.Element => {
               {message}
             </p>
             <div className="flex w-full flex-col gap-2">
-              <Button type="button" onClick={() => navigate('/dashboard', { replace: true })}>
+              <Button type="button" onClick={() => navigate('/dashboard')}>
                 ダッシュボードへ移動する
               </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => navigate('/login', { replace: true })}
-              >
+              <Button type="button" variant="secondary" onClick={() => navigate('/login')}>
                 ログイン画面へ進む
               </Button>
             </div>
@@ -137,14 +139,13 @@ export const VerifyEmailContent = (): JSX.Element => {
               {message}
             </p>
             <div className="flex w-full flex-col gap-2">
-              <Button type="button" onClick={() => navigate('/signup', { replace: true })}>
+              <Button type="button" onClick={() => navigate(resendPath)}>
+                確認メールを再送する
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => navigate('/signup')}>
                 会員登録に戻る
               </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => navigate('/login', { replace: true })}
-              >
+              <Button type="button" variant="secondary" onClick={() => navigate('/login')}>
                 ログイン画面へ戻る
               </Button>
             </div>

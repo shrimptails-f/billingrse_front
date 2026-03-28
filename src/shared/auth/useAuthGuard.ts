@@ -37,11 +37,11 @@ export const useAuthGuard = (options: Options = {}) => {
 
   useEffect(() => {
     if (status === 'authorized' && redirectIfAuthorized) {
-      navigate(redirectIfAuthorized, { replace: true });
+      navigate(redirectIfAuthorized);
     }
 
     if (status === 'unauthorized' && redirectIfUnauthorized) {
-      navigate(redirectIfUnauthorized, { replace: true });
+      navigate(redirectIfUnauthorized);
     }
   }, [navigate, redirectIfAuthorized, redirectIfUnauthorized, status]);
 
