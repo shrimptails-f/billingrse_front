@@ -1,11 +1,13 @@
 export type BillingCurrency = 'JPY' | 'USD';
 
-export type BillingMonthlyTrendItem = {
+export type BillingMonthSummary = {
   year_month: string;
   total_amount: number;
   billing_count: number;
   fallback_billing_count: number;
 };
+
+export type BillingMonthlyTrendItem = BillingMonthSummary;
 
 export type BillingMonthlyTrendResponse = {
   currency: BillingCurrency;
@@ -22,12 +24,8 @@ export type BillingMonthDetailVendorItem = {
   is_other: boolean;
 };
 
-export type BillingMonthDetailResponse = {
-  year_month: string;
+export type BillingMonthDetailResponse = BillingMonthSummary & {
   currency: BillingCurrency;
-  total_amount: number;
-  billing_count: number;
-  fallback_billing_count: number;
   vendor_limit: number;
   vendor_items: BillingMonthDetailVendorItem[];
 };

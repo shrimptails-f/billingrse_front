@@ -7,12 +7,14 @@ import { BillingSummaryContent } from './BillingSummaryContent';
 import type {
   BillingMonthDetailResponse,
   BillingMonthlyTrendResponse,
-} from './billing-summary.types';
+} from '../types/billing-summary.types';
 
 const fetchBillingMonthlyTrendMock = vi.fn();
 const fetchBillingMonthDetailMock = vi.fn();
 
-vi.mock('./billing-summary.api', () => ({
+vi.mock('../api/billing-summary.api', () => ({
+  billingMonthlyTrendQueryKey: ['billing-summary', 'monthly-trend'],
+  billingMonthDetailQueryKey: ['billing-summary', 'monthly-detail'],
   fetchBillingMonthlyTrend: (params: unknown, signal?: AbortSignal) =>
     fetchBillingMonthlyTrendMock(params, signal),
   fetchBillingMonthDetail: (yearMonth: string, params: unknown, signal?: AbortSignal) =>

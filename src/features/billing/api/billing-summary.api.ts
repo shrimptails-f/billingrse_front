@@ -1,9 +1,12 @@
-import { apiFetch } from '@/shared/api/client';
+import { get } from '@/shared/api/http';
 import type {
   BillingCurrency,
   BillingMonthDetailResponse,
   BillingMonthlyTrendResponse,
-} from './billing-summary.types';
+} from '../types/billing-summary.types';
+
+export const billingMonthlyTrendQueryKey = ['billing-summary', 'monthly-trend'] as const;
+export const billingMonthDetailQueryKey = ['billing-summary', 'monthly-detail'] as const;
 
 type FetchBillingMonthlyTrendParams = {
   currency?: BillingCurrency;
@@ -17,20 +20,22 @@ type FetchBillingMonthDetailParams = {
 export const fetchBillingMonthlyTrend = (
   params: FetchBillingMonthlyTrendParams = {},
   signal?: AbortSignal
-): Promise<BillingMonthlyTrendResponse> =>
-  apiFetch('GET', '/billings/summary/monthly-trend', {
+): Promise<BillingMonthlyTrendResponse> => {
+  return get<BillingMonthlyTrendResponse>('/billings/summary/monthly-trend', {
     query: params,
     signal,
     retryOnUnauthorized: true,
   });
+};
 
 export const fetchBillingMonthDetail = (
   yearMonth: string,
   params: FetchBillingMonthDetailParams = {},
   signal?: AbortSignal
-): Promise<BillingMonthDetailResponse> =>
-  apiFetch('GET', `/billings/summary/monthly-detail/${yearMonth}`, {
+): Promise<BillingMonthDetailResponse> => {
+  return get<BillingMonthDetailResponse>(`/billings/summary/monthly-detail/${yearMonth}`, {
     query: params,
     signal,
     retryOnUnauthorized: true,
   });
+};

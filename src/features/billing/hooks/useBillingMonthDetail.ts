@@ -1,16 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchBillingMonthDetail } from './billing-summary.api';
-import type { BillingCurrency } from './billing-summary.types';
-
-export const billingMonthDetailQueryKey = ['billing-summary', 'monthly-detail'] as const;
+import { billingMonthDetailQueryKey, fetchBillingMonthDetail } from '../api/billing-summary.api';
+import type { BillingCurrency } from '../types/billing-summary.types';
 
 type Params = {
   currency: BillingCurrency;
   yearMonth: string | null;
 };
 
-export const useBillingMonthDetail = (params: Params) =>
-  useQuery({
+export const useBillingMonthDetail = (params: Params) => {
+  return useQuery({
     queryKey: [...billingMonthDetailQueryKey, params] as const,
     queryFn: ({ signal }) => {
       if (!params.yearMonth) {
@@ -21,3 +19,4 @@ export const useBillingMonthDetail = (params: Params) =>
     },
     enabled: params.yearMonth !== null,
   });
+};
