@@ -6,7 +6,6 @@
 - feature 名: `billing`
 - route: `/billing-summary`
 - 関連画面: `/dashboard`, `/manual-mail-workflows`, `/login`
-- ステータス: Draft
 - 作成日: 2026-03-29
 - 更新日: 2026-03-29
 

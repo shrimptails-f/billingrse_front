@@ -6,7 +6,6 @@
 - feature 名: `auth`
 - route: `/login`
 - 関連画面: `/dashboard`, `/signup`
-- ステータス: Draft
 - 作成日: 2026-03-29
 - 更新日: 2026-03-29
 

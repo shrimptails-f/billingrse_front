@@ -9,7 +9,6 @@
   - `/dashboard`
   - `/manual-mail-workflows`
   - `/mail-account-connections/gmail/callback`
-- ステータス: Draft
 - 作成日: 2026-03-29
 - 更新日: 2026-03-29
 

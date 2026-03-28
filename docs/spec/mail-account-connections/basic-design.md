@@ -7,7 +7,6 @@
 - route: `/mail-account-connections/gmail`
 - 利用 layout: `DashboardLayout`
 - guard: `AuthGuard`
-- ステータス: Draft
 - 作成日: 2026-03-29
 - 更新日: 2026-03-29
 

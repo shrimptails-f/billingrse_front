@@ -6,7 +6,6 @@
 - feature 名: `auth`
 - route: `/signup`
 - 関連画面: `/login`, `/signup/email-sent`, `/signup/email-resend`, `/signup/verify`
-- ステータス: Draft
 - 作成日: 2026-03-29
 - 更新日: 2026-03-29
 

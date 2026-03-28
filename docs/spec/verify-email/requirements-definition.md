@@ -6,7 +6,6 @@
 - feature 名: `auth`
 - route: `/signup/verify?token=<verification-token>`
 - 関連画面: `/signup`, `/signup/email-sent`, `/signup/email-resend`, `/login`, `/dashboard`
-- ステータス: Draft
 - 作成日: 2026-03-29
 - 更新日: 2026-03-29
 
