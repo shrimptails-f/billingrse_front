@@ -4,7 +4,7 @@ import {
   hasAuthToken,
   setAuthSession,
   type AuthSessionResponse,
-} from '@/lib/auth/token';
+} from '@/shared/auth/token';
 import { Client, type RequestOptions } from './client';
 
 type BodyLessRequestOptions = Omit<RequestOptions<never>, 'body'>;

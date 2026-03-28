@@ -1,5 +1,5 @@
 import { get, post } from '@/shared/api/http';
-import type { AuthSessionResponse } from '@/lib/auth/token';
+import type { AuthSessionResponse } from './token';
 
 export const authRefreshEndpoint = '/auth/refresh';
 

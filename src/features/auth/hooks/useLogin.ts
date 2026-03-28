@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { setAuthSession, type AuthSessionResponse } from '@/lib/auth/token';
+import { setAuthSession, type AuthSessionResponse } from '@/shared/auth/token';
 import { authSessionQueryKey } from '../api/auth.api';
 import { login } from '../api/login.api';
 import type { LoginFormValues } from '../schema/login.schema';

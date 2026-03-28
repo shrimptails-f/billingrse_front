@@ -1,4 +1,4 @@
-import type { AuthSessionResponse } from '@/lib/auth/token';
+import type { AuthSessionResponse } from '@/shared/auth/token';
 import { post } from '@/shared/api/http';
 import type { LoginFormValues } from '../schema/login.schema';
 

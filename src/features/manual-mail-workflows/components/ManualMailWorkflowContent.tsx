@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { authSessionQueryKey } from '@/features/auth/api/auth.api';
-import { clearAuthToken } from '@/lib/auth/token';
+import { clearAuthToken } from '@/shared/auth/token';
 import { ApiError } from '@/shared/api/client';
 import { WorkflowRequestForm } from './WorkflowRequestForm';
 import { WorkflowHistoryList } from './WorkflowHistoryList';
