@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import { VerifyEmailContent } from '@/pages/signup/verify/VerifyEmailContent';
-import { ApiError } from '@/lib/api/client';
+import { VerifyEmailContent } from '@/features/auth/components/VerifyEmailContent';
+import { ApiError } from '@/shared/api/client';
 
 const navigateMock = vi.fn();
 const mutateAsyncMock = vi.fn();
@@ -21,7 +21,7 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-vi.mock('@/pages/signup/verify/useVerifyEmail', () => ({
+vi.mock('@/features/auth/hooks/useVerifyEmail', () => ({
   useVerifyEmail: () => ({
     mutateAsync: (token: string) => mutateAsyncMock(token),
     isPending: false,
@@ -50,7 +50,17 @@ describe('VerifyEmailContent', () => {
   it('shows invalid token error when API responds with invalid_token', async () => {
     initialEntries = ['/?token=invalid'];
     mutateAsyncMock.mockRejectedValueOnce(
-      new ApiError(400, { error: { code: 'invalid_token', message: '不正なトークンです。' } })
+      new ApiError({
+        status: 400,
+        code: 'invalid_token',
+        message: '不正なトークンです。',
+        body: {
+          error: {
+            code: 'invalid_token',
+            message: '不正なトークンです。',
+          },
+        },
+      })
     );
 
     render(

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import { EmailSentContent } from '@/pages/signup/email-sent/EmailSentContent';
+import { EmailSentContent } from '@/features/auth/components/EmailSentContent';
 
 let initialEntries: string[] = ['/'];
 

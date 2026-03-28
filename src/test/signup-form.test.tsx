@@ -1,8 +1,8 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
-import { SignupForm } from '@/pages/signup/SignupForm';
-import { ApiError } from '@/lib/api/client';
+import { SignupForm } from '@/features/auth/components/SignupForm';
+import { ApiError } from '@/shared/api/client';
 
 const navigateMock = vi.fn();
 const mutateMock = vi.fn();
@@ -15,7 +15,7 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-vi.mock('@/pages/signup/useSignup', () => ({
+vi.mock('@/features/auth/hooks/useSignup', () => ({
   useSignup: () => ({
     mutate: mutateMock,
     isPending: false,
@@ -55,10 +55,15 @@ describe('SignupForm', () => {
   it('renders server error when email already exists', async () => {
     mutateMock.mockImplementation((_values, options) => {
       options?.onError?.(
-        new ApiError(401, {
-          error: {
-            code: 'email_already_exists',
-            message: 'このメールアドレスは既に登録されています。',
+        new ApiError({
+          status: 401,
+          code: 'email_already_exists',
+          message: 'このメールアドレスは既に登録されています。',
+          body: {
+            error: {
+              code: 'email_already_exists',
+              message: 'このメールアドレスは既に登録されています。',
+            },
           },
         })
       );
