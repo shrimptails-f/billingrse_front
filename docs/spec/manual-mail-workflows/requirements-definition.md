@@ -1,125 +1,358 @@
-# Manual Mail Workflow Screen Requirements Definition
+# 手動メール取得画面 要件定義
 
-## Purpose and Scope
+## 1. 画面情報
 
-- Provide a dashboard page that allows users to start a manual mail acquisition workflow.
-- Treat `POST /manual-mail-workflows` as an acceptance endpoint rather than a completion endpoint.
-- Show workflow execution history by using `GET /manual-mail-workflows`.
-- Allow users to inspect stage-level details in a modal dialog.
-- Refetch the history list on initial page load and after a successful workflow acceptance.
+- 画面名: 手動メール取得画面
+- feature 名: `manual-mail-workflows`
+- route: `/manual-mail-workflows`
+- 関連画面:
+  - `/dashboard`
+  - `/mail-account-connections/gmail`
+  - `/login`
+- 作成日: 2026-03-29
+- 更新日: 2026-03-29
 
-## Out of Scope
+## 2. 目的とスコープ
 
-- Polling the workflow status endpoint.
-- A dedicated workflow detail page.
-- Additional search filters or sortable history columns.
-- Backend implementation changes.
+### 2-1. 目的
 
-## Dependent APIs
+- 認証済みユーザーが、連携済みメールアカウント・ラベル名・取得期間を指定して手動メール取得ワークフローを受け付けられるようにする
+- 受け付けたワークフローの履歴とステージ別の処理結果を同一画面で確認できるようにする
+- Gmail 未連携のユーザーを、手動メール取得の前提となるメールサービス連携画面へ迷わず誘導する
 
-### Mail account connections
+### 2-2. スコープ
 
-- Endpoint:
+- この画面で提供する機能:
+  - メール連携一覧の取得と実行対象の選択
+  - ラベル名、取得開始日、取得終了日の入力
+  - 手動メール取得ワークフロー受付 API の実行
+  - 実行履歴一覧の取得とページング
+  - 履歴詳細モーダルによる検索条件とステージ結果の確認
+  - Gmail 未連携時の案内表示
+  - 認証切れ時の `/login` への遷移
+- この画面では扱わない機能:
+  - ワークフローのリアルタイム進捗ポーリング
+  - 履歴の検索、絞り込み、並び替え
+  - 履歴詳細の専用 route 化
+  - Gmail 以外のメールプロバイダ連携
+  - バックエンドのワークフロー制御や AI 解析ロジック変更
+
+## 3. 対象ユーザーと利用条件
+
+- 想定ユーザー:
+  - ログイン済みの一般ユーザー
+  - Gmail 連携済みアカウントを使って手動メール取得を実行したいユーザー
+  - 実行結果の概況や失敗内容を画面上で確認したいユーザー
+- 認証要件:
+  - `AuthGuard` 配下でのみ利用できる
+  - 未認証ユーザーは本画面へ直接到達できない
+- 到達経路:
+  - `/dashboard` の `手動メール取得を開く`
+  - URL 直接入力
+  - ログイン後の再訪
+
+## 4. 前提条件と依存
+
+- 関連 feature:
+  - `manual-mail-workflows`
+  - `mail-account-connections`
+  - `dashboard`
+  - `auth`
+- 関連 API:
   - `GET /mail-account-connections`
-- Purpose:
-  - Build `connection_id` options for the execution form
-- Expected response:
-  - `{ items: Array<{ id, provider, account_identifier, created_at, updated_at }> }`
-
-### Start manual mail workflow
-
-- Endpoint:
   - `POST /manual-mail-workflows`
-- Purpose:
-  - Accept a new workflow request
-- Request:
-  - `{ connection_id, label_name, since, until }`
-- Response:
-  - `{ message, workflow_id, status }`
-
-### Manual mail workflow histories
-
-- Endpoint:
   - `GET /manual-mail-workflows`
-- Query:
-  - `limit`
-  - `offset`
-- Response:
-  - `{ items, total_count }`
-- Frontend behavior:
-  - Use `provider` and `account_identifier` when the backend includes them
-  - Fallback to `Unknown` when either field is missing
+- 前提データ:
+  - メール連携一覧は `id`, `provider`, `account_identifier`, `created_at`, `updated_at` を返す
+  - ワークフロー受付 API は `message`, `workflow_id`, `status` を返す
+  - 実行履歴 API は `items`, `total_count` を返す
+  - 履歴 item は `workflow_id`, `connection_id`, `provider`, `account_identifier`, `label_name`, `since`, `until`, `status`, `current_stage`, `queued_at`, `finished_at` と 5 つのステージ集計を持つ
+- 外部サービス依存:
+  - 本画面から直接外部サービスへ遷移しない
+  - 実行されたワークフローの内部では AI 解析が利用される前提とする
+- レイアウト制約:
+  - `DashboardLayout` 配下で表示する
+  - 白ベース、緑アクセント、背景グラデーションのデザインを踏襲する
+  - モバイル優先で構成し、広い画面では説明カード + 条件カード + 履歴カードの視認性を優先する
 
-## User Flow
+## 5. ユーザーストーリー
 
-- A logged-in user opens the manual mail workflow page from the dashboard.
-- The page fetches mail connections and the first history page on load.
-- The user enters `connection_id`, `label_name`, `since`, and `until`, then clicks `Run Analysis`.
-- On successful acceptance, the form becomes locked and the history list is refreshed.
-- The user can open a detail modal from the history table to inspect stage-level results.
+- ユーザーとして、連携済み Gmail アカウントを使って必要なメール取得処理を手動で開始したい
+- ユーザーとして、受付済みワークフローが今どの状態にあるかを履歴一覧で把握したい
+- ユーザーとして、失敗が起きた際にどのステージで何が起きたかを履歴詳細で確認したい
+- ユーザーとして、必要なメール連携がない場合は次に何をすべきかをその場で理解したい
 
-## Screen Structure
+## 6. 画面概要
 
-- Intro card
-- Execution conditions card
-- Execution history card
-- History detail modal
+### 6-1. 画面構成
 
-## Execution Conditions Card
+- ヘッダー:
+  - `DashboardLayout` の `AppHeader` を利用する
+- メインコンテンツ:
+  - イントロカード
+  - 実行条件カード
+  - 実行履歴カード
+- 補助領域:
+  - `DashboardLayout` が提供する背景グラデーション
+  - 実行履歴の更新中表示
+- フッター:
+  - `DashboardLayout` の `AppFooter`
+- モーダル / ドロワー:
+  - 履歴 1 件分の検索条件とステージ集計を表示する履歴詳細モーダル
 
-- Inputs:
-  - Mail connection
-  - Label name
-  - Date range
-- Primary action:
-  - `Run Analysis`
-- Acceptance feedback:
-  - Lock the form and show a short acceptance message
+### 6-2. 主要アクション
 
-## Execution History Card
+- 初期表示時に行うこと:
+  - `GET /mail-account-connections`
+  - `GET /manual-mail-workflows?limit=20&offset=0`
+- ユーザー操作:
+  - 実行対象のメール連携を選択する
+  - ラベル名を入力する
+  - 取得開始日、取得終了日を入力する
+  - `解析実行` を押す
+  - `再読み込み` でメール連携一覧を再取得する
+  - `再取得` で履歴一覧を再取得する
+  - `前へ` / `次へ` で履歴ページを移動する
+  - `詳細` で履歴詳細モーダルを開く
+  - Gmail 未連携時に `Gmail 連携画面へ移動する` を押す
+- 操作結果:
+  - 受付成功時はフォームをロックし、受付メッセージを表示する
+  - 履歴一覧は再取得するか先頭ページへ戻す
+  - 履歴詳細ではワークフロー全体エラーとステージ別失敗メッセージを確認できる
+  - 認証切れ時は `/login` へ遷移する
 
-- History table columns:
-  - `Accepted At`
-  - `Email Address`
-  - `Status`
-  - `Current Stage`
-  - `Details`
-- Pagination:
-  - `Previous`
-  - `Next`
-- Uses `limit / offset`
+## 7. ユーザーフロー
 
-## Detail Modal
+1. ユーザーが `/dashboard` などから `/manual-mail-workflows` に到達する
+2. 画面はメール連携一覧と履歴一覧の初期取得を開始する
+3. Gmail 未連携なら案内文と `Gmail 連携画面へ移動する` を表示する
+4. ユーザーがメール連携、ラベル名、取得期間を入力して `解析実行` を押す
+5. フロントエンドは入力値を検証し、日付を JST の日付境界付き文字列へ変換して受付 API を実行する
+6. 受付成功時はフォームを `受付済み` に切り替え、履歴を再取得するか先頭ページへ戻す
+7. ユーザーは履歴一覧をページングし、必要な行の `詳細` からモーダルを開く
+8. 認証リフレッシュ後も `401` が残る場合はセッション情報を破棄して `/login` へ遷移する
 
-- Header:
-  - `History Details`
-  - `Executed At`
-  - `Workflow ID`
-- Search conditions section:
-  - `Mail Service`
-  - `Email Address`
-  - `Label Name`
-  - `Date Range`
-- Stage summary table:
-  - `Stage`
-  - `Success`
-  - `Business Failures`
-  - `Technical Failures`
-  - `Messages`
+## 8. 機能要件
 
-## State and Error Handling
+### 8-1. 初期表示
 
-- Show loading indicators while fetching connections or histories.
-- Disable the form when no connections are available.
-- Prevent duplicate submissions while the workflow request is pending or already accepted.
-- Redirect to `/login` when a request still returns `401` after the existing refresh retry.
-- Keep the modal closable via backdrop click and `Escape`.
-- Make the modal table area scrollable within a bounded viewport.
+- 初期表示時に必要な API / データ取得:
+  - `GET /mail-account-connections`
+  - `GET /manual-mail-workflows?limit=20&offset=0`
+- 初期表示時の UI:
+  - アイブロウ `Manual Mail Workflows`
+  - タイトル `手動メール取得`
+  - AI 解析利用に関する注意文
+  - `実行条件` カード
+  - `実行履歴` カード
+- 権限不足 / 未認証時の扱い:
+  - route guard により未認証ユーザーは `/login` へ遷移する
+  - 保護画面内の API がリフレッシュ後も `401` を返した場合は、トークンを破棄して `/login` へ遷移する
 
-## Definition of Done
+### 8-2. 入力 / 操作
 
-- Users can start a workflow from the execution form.
-- Users can browse the workflow history table.
-- Users can paginate through history results.
-- Users can open the detail modal and inspect stage summaries.
-- `401` responses redirect the user back to the login page.
+- 入力項目:
+  - `メール連携`
+  - `ラベル名`
+  - `開始日`
+  - `終了日`
+- 操作可能なボタン / リンク:
+  - `解析実行`
+  - `再読み込み`
+  - `再取得`
+  - `前へ`
+  - `次へ`
+  - `詳細`
+  - `閉じる`
+  - `Gmail 連携画面へ移動する`
+- 活性 / 非活性条件:
+  - フォームは次の場合に非活性:
+    - 受付成功後
+    - 受付 mutation 実行中
+    - メール連携一覧の読み込み中
+    - メール連携一覧の取得失敗時
+    - 連携済みアカウント 0 件時
+  - `前へ` は 1 ページ目で非活性
+  - `次へ` は最終ページで非活性
+- 二重送信防止:
+  - `解析実行` 実行中はローディング表示にし、再実行を防止する
+  - 受付成功後はフォーム全体を `受付済み` としてロックする
+  - 画面内では同一マウント中の重複送信を許可しない
+
+### 8-3. 出力 / 表示
+
+- 一覧 / 詳細 / 集計の表示内容:
+  - 履歴一覧:
+    - `受付日時`
+    - `メールアドレス`
+    - `ステータス`
+    - `現在ステージ`
+    - `詳細`
+  - 履歴詳細:
+    - `実行日時`
+    - `ワークフローID`
+    - `メールサービス`
+    - `メールアドレス`
+    - `ラベル名`
+    - `取得期間`
+    - ステージ別の `成功`, `業務失敗`, `技術失敗`, `メッセージ`
+- ラベルや補助文言:
+  - Gmail 未連携時:
+    - `先に Gmail 連携を追加してください。`
+    - `手動メール取得を実行するには、メールサービス連携が 1 件以上必要です。`
+  - メール連携取得失敗時:
+    - `メール連携一覧の取得に失敗しました。時間をおいて再度お試しください。`
+  - 履歴取得失敗時:
+    - `履歴一覧の取得に失敗しました。再取得しても改善しない場合は時間をおいて再度お試しください。`
+  - 履歴空状態:
+    - `まだ履歴はありません。解析実行後にここへ最新の受付状況が表示されます。`
+  - 受付成功時:
+    - `解析実行を受け付けました。最新の状況は履歴一覧をご確認ください。`
+- 日付、通貨、件数などの表示形式:
+  - 履歴一覧の `queued_at` は `Asia/Tokyo` 基準で `ja-JP` 24 時間表記に変換する
+  - 詳細モーダルの期間表示は `YYYY-MM-DD ～ YYYY-MM-DD` 形式にする
+  - `provider` または `account_identifier` が欠損している場合は `不明` と表示する
+  - ステータスは `queued/running/succeeded/partial_success/failed` を日本語ラベルに変換する
+  - ステージ名は `fetch/analysis/vendor_resolution/billing_eligibility/billing` を日本語ラベルに変換する
+
+## 9. 状態要件
+
+- Loading:
+  - メール連携初期取得中は読み込みインジケーターを表示する
+  - 履歴初期取得中は履歴カード内に読み込みインジケーターを表示する
+  - 履歴再取得中は `更新中` 表示を出す
+  - 受付 mutation 中は `解析実行中...` とスピナーを表示する
+- Empty:
+  - 連携 0 件時は Gmail 連携導線を表示し、`解析実行` を無効化する
+  - 履歴 0 件時は空状態メッセージを表示する
+- Success:
+  - 受付成功時は `受付済み` 表示と成功メッセージを出す
+  - 履歴取得成功時は一覧テーブルを表示する
+  - 詳細モーダルではワークフロー全体エラーとステージ詳細を表示できる
+- Validation Error:
+  - 各入力の直下にエラーメッセージを表示する
+  - `終了日は開始日以降にしてください。` の相関エラーを `終了日` 側に表示する
+- API Error:
+  - メール連携一覧取得失敗時は `再読み込み` を表示する
+  - 受付失敗時はフォーム直上にエラーを表示する
+  - 履歴取得失敗時は履歴カード内にエラーを表示する
+- Unauthorized:
+  - `401` 時は auth token を削除し、auth session query を破棄して `/login` へ遷移する
+  - route guard と API エラー処理の両方で未認証を扱う
+
+## 10. バリデーションと業務ルール
+
+- 必須項目:
+  - `メール連携`
+  - `ラベル名`
+  - `開始日`
+  - `終了日`
+- フォーマット制約:
+  - `開始日` と `終了日` は `YYYY-MM-DD`
+- 相関チェック:
+  - `終了日` は `開始日` 以降であること
+- 業務上の入力制約:
+  - 受付 API 送信時は `開始日` を `T00:00:00+09:00`、`終了日` を `T23:59:00+09:00` に正規化する
+  - 利用可能なメール連携が 1 件以上存在すること
+  - 受付成功後は同一画面滞在中の再受付を行わない
+- 操作可能条件:
+  - ログイン済みであること
+  - メール連携一覧が正常取得できていること
+  - フォームバリデーションが通っていること
+
+## 11. API / データ要件
+
+### 11-1. 利用 API 一覧
+
+| 用途               | Method | Endpoint                    | 入力                                            | 出力                               | 備考                         |
+| ------------------ | ------ | --------------------------- | ----------------------------------------------- | ---------------------------------- | ---------------------------- |
+| メール連携一覧取得 | GET    | `/mail-account-connections` | なし                                            | `items`                            | 実行条件カード初期表示で利用 |
+| ワークフロー受付   | POST   | `/manual-mail-workflows`    | `connection_id`, `label_name`, `since`, `until` | `message`, `workflow_id`, `status` | 成功時に受付メッセージ表示   |
+| 実行履歴一覧取得   | GET    | `/manual-mail-workflows`    | `limit`, `offset`                               | `items`, `total_count`             | 1 ページ 20 件               |
+
+### 11-2. データ要件
+
+- 画面表示に必要なデータ項目:
+  - メール連携:
+    - `id`
+    - `provider`
+    - `account_identifier`
+  - 履歴:
+    - `workflow_id`
+    - `queued_at`
+    - `provider`
+    - `account_identifier`
+    - `label_name`
+    - `since`
+    - `until`
+    - `status`
+    - `current_stage`
+    - `error_message`
+    - `fetch`, `analysis`, `vendor_resolution`, `billing_eligibility`, `billing`
+- フロントで加工が必要な項目:
+  - メール連携 select の表示ラベルは `PROVIDER / account_identifier`
+  - `status` はバッジ文言と色へ変換する
+  - `current_stage` は日本語ラベルへ変換する
+  - 履歴詳細の `failures` は文言リストへ整形する
+- 欠損時のフォールバック方針:
+  - `provider`, `account_identifier` 欠損時は `不明`
+  - ステージ failures が 0 件なら `なし`
+  - 不正な日時文字列は生値表示でフォールバックする
+
+## 12. UI / UX 要件
+
+- モバイル優先で成立すること
+- 600px 未満では 1 カラムで、イントロカード → 実行条件 → 実行履歴の順に積む
+- 600px 以上ではカード内余白を広げるが、基本は 1 カラムを維持する
+- 960px 以上では読みやすさを優先して最大幅を制御する
+- 広いデスクトップでは実行条件と実行履歴を 2 カラムで並べられる構造にする
+- `解析実行` は実行条件カード内で常に見失わない位置に置く
+- AI 利用上の注意文は画面上部で読めること
+- 履歴の `詳細` からモーダルを開き、閉じるまで文脈を失わないこと
+
+## 13. アクセシビリティ要件
+
+- `メール連携`, `ラベル名`, `開始日`, `終了日` は可視ラベルを持つ
+- キーボードだけで `解析実行`, `再読み込み`, `再取得`, ページ移動, `詳細`, モーダル `閉じる` を操作できる
+- エラーメッセージは入力直下またはセクション直近に表示し、`role="alert"` または `aria-live="polite"` を使う
+- ローディングスピナーは読み上げラベルを持つ
+- 履歴詳細は `role="dialog"` と `aria-modal="true"` を持ち、`Escape` と backdrop click で閉じられる
+- コントラストは WCAG AA を満たす
+
+## 14. 非機能要件
+
+- 想定表示件数:
+  - 履歴はページ単位 20 件表示
+  - 総件数は数十件から数百件までを想定する
+- パフォーマンス上の注意:
+  - 履歴は `limit` / `offset` ベースで取得し、全件を一括保持しない
+  - 履歴詳細は追加 API を呼ばず、一覧取得済みデータから表示する
+  - メール連携一覧は別 feature の query を再利用する
+- 監視 / ログ出力の要件:
+  - ラベル名や履歴失敗メッセージなど、機微情報を不用意に console 出力しない
+  - `workflow_id` を除き、メール本文由来の情報をフロント側ログへ出しすぎない
+- セキュリティ上の注意:
+  - 本画面は認証済み route 配下で扱う
+  - AI 解析対象に個人情報が含まれる可能性を注意文で明示する
+  - 認証切れ時はトークンを削除して `/login` へ遷移する
+
+## 15. 対象外
+
+- リアルタイム進捗更新
+- 履歴一覧の検索、フィルタ、ソート
+- ワークフロー詳細の専用ページ
+- ワークフローのキャンセル、再実行、削除
+- Gmail 以外のメールプロバイダ追加
+
+## 16. Definition of Done
+
+- 手動メール取得の受付フローが成立する
+- Gmail 未連携、Loading、Empty、Success、Validation Error、API Error、Unauthorized を設計できている
+- 履歴一覧のページングと履歴詳細モーダルの要件が明確である
+- API 契約と表示項目の対応が明確である
+- テスト観点が主要な分岐をカバーしている
+
+## 17. 未解決事項
+
+- `label_name` の許可文字種と最大文字数はバックエンド契約の明文化待ち
+- 受付成功後に同一画面滞在中の再実行を許可するかは運用要件の確認余地がある
