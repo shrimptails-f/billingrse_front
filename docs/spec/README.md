@@ -2,10 +2,10 @@
 
 | 画面名                                                                            | URL                                         | 概要                                                                                                     |
 | --------------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [ログイン画面](./login/requirements-definition.md)                                | `/login`                                    | 登録済みユーザーがメールアドレスとパスワードで認証し、業務画面へ遷移するための入口画面。                 |
-| [会員登録画面](./signup/requirements-definition.md)                               | `/signup`                                   | 未登録ユーザーが氏名、メールアドレス、パスワードを入力して仮登録を行い、確認メール送信フローへ進む画面。 |
-| [メール再送信画面](./resend-email/requirements-definition.md)                     | `/signup/email-resend`                      | 会員登録済みメールアドレスとパスワードを使って確認メールを再送し、結果を同画面で確認する画面。           |
-| [メール認証画面](./verify-email/requirements-definition.md)                       | `/signup/verify?token=<verification-token>` | 確認メールのトークンでメールアドレス認証を実行し、成功・失敗に応じた次の導線を案内する画面。             |
-| [メールアカウント連携画面](./mail-account-connections/requirements-definition.md) | `/mail-account-connections/gmail`           | Gmail アカウントの連携追加、連携済み一覧の確認、不要な連携の解除を行う管理画面。                         |
-| [手動メール取得画面](./manual-mail-workflows/requirements-definition.md)          | `/manual-mail-workflows`                    | 条件を指定して手動メール取得ワークフローを開始し、実行履歴やステージ詳細を確認する画面。                 |
-| [請求集計画面](./billing-summary/requirements-definition.md)                      | `/billing-summary`                          | 直近 12 ヶ月の請求推移と、選択月の支払先別請求内訳を集計ビューで確認する画面。                           |
+| [ログイン画面](./login/README.md)                                                 | `/login`                                    | 登録済みユーザーがメールアドレスとパスワードで認証し、業務画面へ遷移するための入口画面。                 |
+| [会員登録画面](./signup/README.md)                                                | `/signup`                                   | 未登録ユーザーが氏名、メールアドレス、パスワードを入力して仮登録を行い、確認メール送信フローへ進む画面。 |
+| [メール再送信画面](./resend-email/README.md)                                      | `/signup/email-resend`                      | 会員登録済みメールアドレスとパスワードを使って確認メールを再送し、結果を同画面で確認する画面。           |
+| [メール認証画面](./verify-email/README.md)                                        | `/signup/verify?token=<verification-token>` | 確認メールのトークンでメールアドレス認証を実行し、成功・失敗に応じた次の導線を案内する画面。             |
+| [メールアカウント連携画面](./mail-account-connections/README.md)                  | `/mail-account-connections/gmail`           | Gmail アカウントの連携追加、連携済み一覧の確認、不要な連携の解除を行う管理画面。                         |
+| [手動メール取得画面](./manual-mail-workflows/README.md)                           | `/manual-mail-workflows`                    | 条件を指定して手動メール取得ワークフローを開始し、実行履歴やステージ詳細を確認する画面。                 |
+| [請求集計画面](./billing-summary/README.md)                                       | `/billing-summary`                          | 直近 12 ヶ月の請求推移と、選択月の支払先別請求内訳を集計ビューで確認する画面。                           |
