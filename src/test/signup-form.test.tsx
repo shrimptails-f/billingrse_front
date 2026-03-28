@@ -115,10 +115,22 @@ describe('SignupForm', () => {
     fireEvent.click(screen.getByRole('button', { name: '登録してメールを送る' }));
 
     await waitFor(() =>
-      expect(navigateMock).toHaveBeenCalledWith('/signup/email-sent?email=user%40example.com', {
-        replace: true,
-      })
+      expect(navigateMock).toHaveBeenCalledWith('/signup/email-sent?email=user%40example.com')
     );
     expect(sessionStorage.getItem('lastRegisteredEmail')).toBe('user@example.com');
+  });
+
+  it('navigates to resend page with current email', () => {
+    render(
+      <BrowserRouter>
+        <SignupForm />
+      </BrowserRouter>
+    );
+    fillForm();
+
+    fireEvent.click(screen.getByRole('button', { name: '確認メールを再送する' }));
+
+    expect(navigateMock).toHaveBeenCalledWith('/signup/email-resend?email=user%40example.com');
+    expect(mutateMock).not.toHaveBeenCalled();
   });
 });

@@ -37,14 +37,14 @@ export const ManualMailWorkflowContent = (): JSX.Element => {
   const handleUnauthorized = (): void => {
     clearAuthToken();
     queryClient.removeQueries({ queryKey: authSessionQueryKey });
-    navigate('/login', { replace: true });
+    navigate('/login');
   };
 
   useEffect(() => {
     if (historyQuery.error instanceof ApiError && historyQuery.error.status === 401) {
       clearAuthToken();
       queryClient.removeQueries({ queryKey: authSessionQueryKey });
-      navigate('/login', { replace: true });
+      navigate('/login');
     }
   }, [historyQuery.error, navigate, queryClient]);
 

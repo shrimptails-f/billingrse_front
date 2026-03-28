@@ -44,6 +44,7 @@ describe('VerifyEmailContent', () => {
 
     expect(screen.getByText('トークンが見つかりません')).toBeInTheDocument();
     expect(screen.getByText('トークンが見つかりませんでした。')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '確認メールを再送する' })).toBeInTheDocument();
     expect(mutateAsyncMock).not.toHaveBeenCalled();
   });
 
@@ -71,6 +72,7 @@ describe('VerifyEmailContent', () => {
 
     await waitFor(() => expect(screen.getByText('メール認証に失敗しました')).toBeInTheDocument());
     expect(screen.getByText('不正なトークンです。')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '確認メールを再送する' })).toBeInTheDocument();
   });
 
   it('shows success message when verification succeeds', async () => {

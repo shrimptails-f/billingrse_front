@@ -77,7 +77,7 @@ export const BillingSummaryContent = (): JSX.Element => {
 
     clearAuthToken();
     queryClient.removeQueries({ queryKey: authSessionQueryKey });
-    navigate('/login', { replace: true });
+    navigate('/login');
   }, [isDetailUnauthorized, isTrendUnauthorized, navigate, queryClient]);
 
   return (

@@ -48,7 +48,7 @@ export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
     } catch (error) {
       console.error('Failed to logout', error);
     } finally {
-      navigate('/login', { replace: true });
+      navigate('/login');
     }
   };
 

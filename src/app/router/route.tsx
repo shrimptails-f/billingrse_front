@@ -2,7 +2,13 @@ import type { JSX } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { DashboardLayout } from '@/app/layouts/DashboardLayout';
 import { Providers } from '@/app/providers/Providers';
-import { LoginPage, SignupEmailSentPage, SignupPage, VerifyEmailPage } from '@/features/auth';
+import {
+  LoginPage,
+  ResendEmailPage,
+  SignupEmailSentPage,
+  SignupPage,
+  VerifyEmailPage,
+} from '@/features/auth';
 import { BillingSummaryPage } from '@/features/billing';
 import { HomePage } from '@/features/dashboard';
 import { GmailConnectionPage, GmailOAuthCallbackPage } from '@/features/mail-account-connections';
@@ -16,12 +22,14 @@ const AppRouter = (): JSX.Element => {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
+          <Route path="/login" element={<LoginPage />} />
+
           <Route element={<GuestGuard />}>
-            <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
           </Route>
 
           <Route path="/signup/email-sent" element={<SignupEmailSentPage />} />
+          <Route path="/signup/email-resend" element={<ResendEmailPage />} />
           <Route path="/signup/verify" element={<VerifyEmailPage />} />
 
           <Route element={<AuthGuard />}>
@@ -37,7 +45,7 @@ const AppRouter = (): JSX.Element => {
             </Route>
           </Route>
 
-          <Route path="/dashboard" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<Navigate to="/dashboard" />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Providers>

@@ -91,7 +91,7 @@ export const GmailConnectionContent = (): JSX.Element => {
           variant="secondary"
           fullWidth={false}
           disabled={isSubmitting}
-          onClick={() => navigate('/dashboard', { replace: true })}
+          onClick={() => navigate('/dashboard')}
         >
           ホームへ戻る
         </Button>
