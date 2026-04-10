@@ -6,7 +6,7 @@ type Props = {
   label: string;
 };
 
-export const BillingSummaryInfoTooltip = ({ text, label }: Props): JSX.Element => {
+export const InfoTooltip = ({ text, label }: Props): JSX.Element => {
   const tooltipId = useId();
   const [isPinned, setIsPinned] = useState(false);
   const [isHovered, setIsHovered] = useState(false);

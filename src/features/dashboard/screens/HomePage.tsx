@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
-import { DashboardEntryCard } from '../components/DashboardEntryCard';
+import { DashboardContent } from '../components/DashboardContent';
 
 export const HomePage = (): JSX.Element => {
-  return <DashboardEntryCard />;
+  return <DashboardContent />;
 };
