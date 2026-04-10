@@ -1,6 +1,7 @@
 import type { JSX } from 'react';
 import { toFriendlyMessage } from '@/shared/api/errors';
 import { Spinner } from '@/shared/ui/Spinner';
+import { InfoTooltip } from '@/shared/ui/primitives/InfoTooltip';
 import {
   formatBillingAmount,
   formatBillingCount,
@@ -12,7 +13,6 @@ import type {
   BillingMonthSummary,
 } from '../types/billing-summary.types';
 import { BillingSummaryErrorPanel } from './BillingSummaryErrorPanel';
-import { BillingSummaryInfoTooltip } from './BillingSummaryInfoTooltip';
 
 type Props = {
   currency: BillingCurrency;
@@ -67,7 +67,7 @@ export const BillingSummaryDetailSection = ({
             <div className="flex items-center justify-between gap-4">
               <dt className="flex items-center gap-2 text-sm font-semibold text-slate-500">
                 <span>補完件数</span>
-                <BillingSummaryInfoTooltip
+                <InfoTooltip
                   label="補完件数の説明を表示"
                   text="請求日がメールに無いため、メール受信日で判定した件数"
                 />
