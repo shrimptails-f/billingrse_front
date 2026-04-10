@@ -9,7 +9,7 @@ import { clearAuthToken } from '@/shared/auth/token';
 import { useDashboardSummary } from '../hooks/useDashboardSummary';
 import { DashboardEntryCard } from './DashboardEntryCard';
 
-export const DashboardContent = (): JSX.Element => {
+export const DashboardContent = (): JSX.Element | null => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const summaryQuery = useDashboardSummary();
@@ -25,6 +25,10 @@ export const DashboardContent = (): JSX.Element => {
     queryClient.removeQueries({ queryKey: authSessionQueryKey });
     navigate('/login');
   }, [isUnauthorized, navigate, queryClient]);
+
+  if (isUnauthorized) {
+    return null;
+  }
 
   return (
     <DashboardEntryCard

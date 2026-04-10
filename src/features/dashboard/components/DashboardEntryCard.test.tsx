@@ -10,6 +10,12 @@ const summaryResponse: DashboardSummaryResponse = {
   total_saved_billing_count: 842,
 };
 
+const emptySummaryResponse: DashboardSummaryResponse = {
+  current_month_analysis_success_count: 0,
+  current_month_fallback_billing_count: 0,
+  total_saved_billing_count: 0,
+};
+
 describe('DashboardEntryCard', () => {
   it('renders three KPI items and dashboard links', () => {
     render(
@@ -54,5 +60,15 @@ describe('DashboardEntryCard', () => {
     expect(screen.getByRole('tooltip')).toHaveTextContent(
       '請求日がメールに無いため、メール受信日で判定した件数'
     );
+  });
+
+  it('renders zero counts as valid KPI values', () => {
+    render(
+      <MemoryRouter>
+        <DashboardEntryCard summary={emptySummaryResponse} />
+      </MemoryRouter>
+    );
+
+    expect(screen.getAllByText('0件')).toHaveLength(3);
   });
 });

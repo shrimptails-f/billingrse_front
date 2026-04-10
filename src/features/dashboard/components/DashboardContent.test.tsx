@@ -7,7 +7,20 @@ import { ApiError } from '@/shared/api/client';
 import { DashboardContent } from './DashboardContent';
 import type { DashboardSummaryResponse } from '../types/dashboard-summary.types';
 
+const { navigateMock } = vi.hoisted(() => ({
+  navigateMock: vi.fn(),
+}));
+
 const fetchDashboardSummaryMock = vi.fn();
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
+
+  return {
+    ...actual,
+    useNavigate: () => navigateMock,
+  };
+});
 
 vi.mock('../api/dashboard-summary.api', () => ({
   dashboardSummaryQueryKey: ['dashboard', 'summary'],
@@ -46,6 +59,7 @@ const createWrapper = () => {
 describe('DashboardContent', () => {
   beforeEach(() => {
     fetchDashboardSummaryMock.mockReset();
+    navigateMock.mockReset();
   });
 
   it('renders dashboard summary after fetching', async () => {
@@ -70,9 +84,21 @@ describe('DashboardContent', () => {
     expect(await screen.findByRole('alert')).toBeInTheDocument();
     expect(screen.getByText('解析・保存サマリーの取得に失敗しました。')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: '再読み込み' }));
+    fireEvent.click(screen.getByRole('button', { name: '再試行' }));
 
     await waitFor(() => expect(screen.getByText('1,280件')).toBeInTheDocument());
     expect(fetchDashboardSummaryMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('redirects to login when the summary API returns 401', async () => {
+    fetchDashboardSummaryMock.mockRejectedValueOnce(new ApiError({ status: 401 }));
+
+    render(<DashboardContent />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(navigateMock).toHaveBeenCalledWith('/login');
+    });
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 });
