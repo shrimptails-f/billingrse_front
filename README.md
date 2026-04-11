@@ -102,7 +102,20 @@ project root / src
 
 ## 技術スタック
 
-採用技術と各ライブラリの役割は[技術構成（スタック）](./docs/technology_stack.md)にまとめています。
+- Language: TypeScript
+- Library: React 18
+- Build Tool: Vite
+- Routing: React Router
+- Styling: Tailwind CSS
+- UI Components: `shared/ui` primitives
+- Server State: TanStack Query
+- Form: React Hook Form
+- Validation: Zod
+- Auth: Bearer token auth, session refresh, Gmail OAuth2
+- API Client: `fetch`, custom API client
+- Testing: Vitest, React Testing Library, jsdom
+- Lint / Format: ESLint, Prettier
+- Tooling: Taskfile, DevContainer
 
 ## 設計上の工夫
 
@@ -126,11 +139,9 @@ project root / src
 
 ## 詳細ドキュメント
 
-- ドキュメント一覧: [docs](./docs)
-- ローカル環境構築手順: [docs/VsCodeDevContainer.md](./docs/VsCodeDevContainer.md)
+- ローカル環境構築手順: [docs/local_setup.md](./docs/local_setup.md)
 - アーキテクチャ: [docs/architecture.md](./docs/architecture.md)
 - 技術スタック: [docs/technology_stack.md](./docs/technology_stack.md)
 - コーディングルール: [docs/coding_rules.md](./docs/coding_rules.md)
 - デザインガイドライン: [docs/design_guidelines.md](./docs/design_guidelines.md)
 - 画面設計一覧: [docs/spec/README.md](./docs/spec/README.md)
-- バックエンド: [billingrse_backend](https://github.com/shrimptails-f/billingrse_backend)
