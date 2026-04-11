@@ -1,27 +1,32 @@
-# 環境構築手順
+# VS Code DevContainer
 
-## 1.バックエンドを環境構築する
-
-https://github.com/shrimptails-f/billingrse_backend
-
-## 2.ソースをクローン
+## 1. ソースをクローン
 
 ```bash
-git clone https://github.com/shrimptails-f/billingrse_backend.git
+git clone git@github.com:shrimptails-f/billingrse_front.git
+cd billingrse_front
 ```
 
-## 3. .envをコピー
+## 2. .envをコピー
 
 ```bash
 cp .devcontainer/.env.sample .devcontainer/.env
 ```
 
-## 4. VsCodeでプロジェクトフォルダーを開く
+※必要に応じて `.devcontainer/.env` の `VITE_BACKEND_API_URL` を調整してください。
 
-## 5. Reopen in Containerを押下
+## 3. VS Code でプロジェクトフォルダーを開く
 
-もし表示されない場合は Ctrl Shift P→Reopen in containerと入力して実行でもおｋ
+`billingrse_front` のフォルダを VS Code で開きます。
 
-# 環境構築完了です！！
+## 4. Reopen in Container を実行
 
-お疲れ様でした。
+コマンドパレットから `Dev Containers: Reopen in Container` を実行します。
+
+## 5. 開発サーバーを起動
+
+VsCodeのターミナルで下記のコマンドを実行してください。
+
+```bash
+npm run dev
+```

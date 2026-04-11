@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLogout } from '@/features/auth';
-import { isMockModeEnabled } from '@/shared/lib/mock-mode';
 
 type Props = {
   title?: string;
@@ -89,28 +88,22 @@ export const AppHeader = ({ title = APP_NAME }: Props): JSX.Element => {
                 aria-label="ヘッダーメニュー"
                 className="absolute right-0 top-[calc(100%+0.5rem)] z-30 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-200/70"
               >
-                {!isMockModeEnabled ? (
-                  <>
-                    <button
-                      type="button"
-                      role="menuitem"
-                      className="flex w-full flex-col rounded-xl px-4 py-3 text-left transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        navigate('/mail-account-connections/gmail');
-                      }}
-                    >
-                      <span className="text-sm font-semibold text-slate-900">
-                        メールサービス連携
-                      </span>
-                      <span className="text-xs leading-5 text-slate-500">
-                        Gmail 連携画面へ移動します
-                      </span>
-                    </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="flex w-full flex-col rounded-xl px-4 py-3 text-left transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    navigate('/mail-account-connections/gmail');
+                  }}
+                >
+                  <span className="text-sm font-semibold text-slate-900">メールサービス連携</span>
+                  <span className="text-xs leading-5 text-slate-500">
+                    Gmail 連携画面へ移動します
+                  </span>
+                </button>
 
-                    <div className="my-1 border-t border-slate-100" />
-                  </>
-                ) : null}
+                <div className="my-1 border-t border-slate-100" />
 
                 <button
                   type="button"
