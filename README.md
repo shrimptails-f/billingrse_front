@@ -145,3 +145,7 @@ project root / src
 - コーディングルール: [docs/coding_rules.md](./docs/coding_rules.md)
 - デザインガイドライン: [docs/design_guidelines.md](./docs/design_guidelines.md)
 - 画面設計一覧: [docs/spec/README.md](./docs/spec/README.md)
+
+## 関連リポジトリ
+
+- [バックエンド](https://github.com/shrimptails-f/billingrse_backend)
