@@ -77,7 +77,8 @@ jobs:
     env:
       AWS_REGION: ap-northeast-1
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
-      S3_BUCKET: gmail-parser-dev-front
+      S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+      CLOUDFRONT_COMMENT: ${{ secrets.CLOUDFRONT_COMMENT }}
     steps:
       - name: Download dist
         uses: actions/download-artifact@v4
@@ -95,6 +96,10 @@ jobs:
             echo "Missing S3 bucket name"
             exit 1
           fi
+          if [ -z "${CLOUDFRONT_COMMENT}" ]; then
+            echo "Missing CloudFront comment"
+            exit 1
+          fi
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -107,18 +112,18 @@ jobs:
 
       - name: Resolve CloudFront domain name
         run: |
-          domain="$(aws cloudfront list-distributions --query "DistributionList.Items[?Comment=='gmail-parser-dev-front'].DomainName | [0]" --output text)"
+          domain="$(aws cloudfront list-distributions --query "DistributionList.Items[?Comment=='${CLOUDFRONT_COMMENT}'].DomainName | [0]" --output text)"
           if [ -z "${domain}" ] || [ "${domain}" = "None" ]; then
-            echo "Could not find CloudFront distribution DomainName for Comment=gmail-parser-dev-front"
+            echo "Could not find CloudFront distribution DomainName for Comment=${CLOUDFRONT_COMMENT}"
             exit 1
           fi
           echo "CLOUDFRONT_DOMAIN_NAME=${domain}" >> "${GITHUB_ENV}"
 
       - name: Resolve CloudFront distribution ID
         run: |
-          id="$(aws cloudfront list-distributions --query "DistributionList.Items[?Comment=='gmail-parser-dev-front'].Id | [0]" --output text)"
+          id="$(aws cloudfront list-distributions --query "DistributionList.Items[?Comment=='${CLOUDFRONT_COMMENT}'].Id | [0]" --output text)"
           if [ -z "${id}" ] || [ "${id}" = "None" ]; then
-            echo "Could not find CloudFront distribution ID for Comment=gmail-parser-dev-front"
+            echo "Could not find CloudFront distribution ID for Comment=${CLOUDFRONT_COMMENT}"
             exit 1
           fi
           echo "CLOUDFRONT_DISTRIBUTION_ID=${id}" >> "${GITHUB_ENV}"
